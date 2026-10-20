@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex 云端测试</title>
+</head>
+<body>
+  <h1>Codex 云端测试成功</h1>
+  <button id="show-time" type="button">显示当前时间</button>
+  <p id="current-time" aria-live="polite"></p>
+  <script>
+    const button = document.getElementById('show-time');
+    const output = document.getElementById('current-time');
+    button.addEventListener('click', () => {
+      output.textContent = new Date().toLocaleString('zh-CN');
+    });
+  </script>
+</body>
+</html>
