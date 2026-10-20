@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex 云端测试</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 80px auto; padding: 0 24px; line-height: 1.6; }
+    button { padding: 10px 20px; font: inherit; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Codex 云端测试成功</h1>
+    <button id="show-time" type="button">显示当前时间</button>
+    <p id="current-time" role="status" aria-live="polite">点击按钮查看当前时间。</p>
+  </main>
+  <script>
+    const timeButton = document.getElementById('show-time');
+    const timeOutput = document.getElementById('current-time');
+
+    timeButton.addEventListener('click', () => {
+      timeOutput.textContent = '当前时间：' + new Date().toLocaleString('zh-CN');
+    });
+  </script>
+</body>
+</html>
