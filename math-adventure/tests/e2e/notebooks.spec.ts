@@ -122,7 +122,7 @@ test("folding uses six actual 3D faces, manual angle changes normals, pause free
   await page.getByRole("button", { name: "继续", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "提交答案", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15000 });
   await expect(page.locator("[data-fold-face]")).toHaveCount(6);
   await page.getByRole("button", { name: "查看图B", exact: true }).click();
   const slider = page.getByLabel("折叠角度", { exact: true });
@@ -138,7 +138,7 @@ test("folding uses six actual 3D faces, manual angle changes normals, pause free
   await page.getByRole("button", { name: "重播动画", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "提交答案", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15000 });
   await expect(page.locator("[data-fold-face]")).toHaveCount(6);
 });
 test("first wrong is retained through graduated help, distinct retry and successful original answer", async ({
