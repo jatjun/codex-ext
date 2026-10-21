@@ -349,4 +349,17 @@ describe("geometric correctness", () => {
       checkTask(working, working.tasks[0], working.tasks[0].answer, [], []),
     ).toBe(true);
   });
+  it("translation transfer uses a clearly visible turn rather than a one-degree visual trap", () => {
+    const values = valuesFor("b", 22),
+      lesson = variant("b", 22, values);
+    expect(validate("b", 22, { ...values, angle: 1 })).not.toEqual([]);
+    expect(validate("b", 22, { ...values, angle: 45 })).toEqual([]);
+    if (
+      lesson.scene.type !== "extension" ||
+      lesson.scene.spec.kind !== "motion"
+    )
+      throw Error("motion");
+    expect(lesson.scene.spec.objects[0].rotation).toBeGreaterThanOrEqual(15);
+    expect(lesson.tasks[0].answer).toBe("不是");
+  });
 });

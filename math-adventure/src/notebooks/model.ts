@@ -358,7 +358,7 @@ export function fields(book: Book, number: number): Field[] {
       return [
         f("dx", "水平移动距离", 140, 40, 220),
         f("dy", "竖直移动距离", 0, -60, 60),
-        f("angle", "同时转动角度（0表示不转）", 0, 0, 180),
+        f("angle", "同时转动角度（0表示不转）", 0, 0, 180, 15),
       ];
     case 23:
       return [
