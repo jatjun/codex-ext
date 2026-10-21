@@ -129,7 +129,7 @@ function Shop(p: SceneProps) {
       </div>
       {!p.transfer && (
         <p className="scene-math-readout" aria-live="polite">
-          每只 3 元 · 收银台 {paid} 枚金币
+          每只 3 元 · 阳阳已付 {paid} 元
         </p>
       )}
       {p.transfer ? (
@@ -189,7 +189,9 @@ function Shop(p: SceneProps) {
             stroke="#d5bd81"
           />
           <text x="365" y="69" fontSize="16" fill="#694c3c">
-            收银台：{paid} 枚金币
+            {observing && a.frame <= 4
+              ? "收银台：" + paid + " 枚金币"
+              : "总钱数：12 元"}
           </text>
           {observing &&
             a.frame <= 4 &&

@@ -57,6 +57,13 @@ test("shop: complete genuine two-step interaction and preserve first wrong answe
   page,
 }) => {
   await start(page, "玩具商店");
+  await expect(page.locator(".scene-math-readout")).toContainText(
+    "阳阳已付 12 元",
+  );
+  await expect(page.locator(".math-svg")).toContainText("总钱数：12 元");
+  await expect(page.locator(".math-svg")).not.toContainText(
+    "收银台：12 枚金币",
+  );
   await answer(page, "12");
   await next(page);
   await page.getByLabel("12元是两只玩具的总价", { exact: true }).check();
