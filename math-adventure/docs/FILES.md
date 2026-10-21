@@ -28,3 +28,26 @@
 - `math-adventure/tests/queue.test.ts`
 
 新增排队设计见 QUEUE_DESIGN.md；测试记录见 VALIDATION.md。缓存、截图、node_modules、dist 和测试临时产物不提交。
+
+
+## V1.2 错题本动画修改清单
+
+本次仅修改以下15个项目文件，原四关、排队专题、根目录测试网页和工作流均保留：
+
+- `math-adventure/README.md`
+- `math-adventure/docs/FILES.md`
+- `math-adventure/docs/PDF_NOTEBOOK.md`（新增）
+- `math-adventure/docs/TEACHING_DESIGN.md`
+- `math-adventure/docs/VALIDATION.md`
+- `math-adventure/package.json`
+- `math-adventure/package-lock.json`
+- `math-adventure/src/App.tsx`
+- `math-adventure/src/components/Report.tsx`
+- `math-adventure/src/pdf/model.ts`（新增）
+- `math-adventure/src/pdf/Scene.tsx`（新增）
+- `math-adventure/src/pdf/Lab.tsx`（新增）
+- `math-adventure/src/styles/main.css`
+- `math-adventure/tests/pdf.test.ts`（新增）
+- `math-adventure/tests/e2e/pdf.spec.ts`（新增）
+
+本次不新增依赖。原PDF、本地预览截图、孩子学习记录、缓存和构建产物均不提交。

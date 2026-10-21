@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PdfMap, PdfLesson } from "./pdf/Lab";
 import { levels, type LevelId } from "./questions/data";
 import type { Settings, QueueKind } from "./questions/models";
 import { ConfiguredLesson, QueueMap } from "./components/Configuration";
@@ -15,8 +16,9 @@ function Brand() {
   );
 }
 export default function App() {
+  const [pdfId, setPdfId] = useState<number | null>(null);
   const [queueKind, setQueueKind] = useState<QueueKind | null>(null);
-  const [page, setPage] = useState<LevelId | "home" | "report">("home"),
+  const [page, setPage] = useState<LevelId | "home" | "report" | "pdf">("home"),
     [visit, setVisit] = useState(0);
   const completed = (id: LevelId) => {
     const l = levels.find((l) => l.id === id)!,
@@ -32,6 +34,7 @@ export default function App() {
   const navigate = (p: typeof page) => {
     setPage(p);
     setQueueKind(null);
+    setPdfId(null);
     setVisit((v) => v + 1);
     window.scrollTo({ top: 0 });
   };
@@ -110,6 +113,18 @@ export default function App() {
               <span className="lab-triangle">△</span>
               <span className="lab-coin">¥</span>
             </div>
+          </section>
+          <section className="queue-feature pdf-feature">
+            <div>
+              <span className="eyebrow">NEW / 错题本动画</span>
+              <h2>21道错题，21次动手发现。</h2>
+              <p>
+                图形拆分、动物前后、数量关系、满减和购物比较。原题与可调数字变式。
+              </p>
+            </div>
+            <button className="primary" onClick={() => navigate("pdf")}>
+              进入错题本动画 →
+            </button>
           </section>
           <section className="queue-feature">
             <div>
@@ -209,6 +224,25 @@ export default function App() {
             </span>
           </section>
         </main>
+      ) : page === "pdf" ? (
+        pdfId ? (
+          <PdfLesson
+            key={pdfId + ":" + visit}
+            id={pdfId}
+            onExit={() => {
+              setPdfId(null);
+              window.scrollTo({ top: 0 });
+            }}
+          />
+        ) : (
+          <PdfMap
+            onChoose={(id) => {
+              setPdfId(id);
+              window.scrollTo({ top: 0 });
+            }}
+            onBack={() => navigate("home")}
+          />
+        )
       ) : page === "report" ? (
         <Report onBack={() => navigate("home")} />
       ) : page === "queue" && !queueKind ? (
@@ -228,7 +262,7 @@ export default function App() {
         <p>
           为好奇心留一点空间。<span>学习记录仅保存在你的浏览器中。</span>
         </p>
-        <span className="version">探索版 V1.1 · 适合 8–10 岁</span>
+        <span className="version">探索版 V1.2 · 适合 8–10 岁</span>
       </footer>
     </>
   );

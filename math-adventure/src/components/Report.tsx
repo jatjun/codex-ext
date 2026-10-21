@@ -1,3 +1,4 @@
+import { catalog } from "../pdf/model";
 import { levels } from "../questions/data";
 import { readRecords, report, exportRecords } from "../records/store";
 export function Report({ onBack }: { onBack: () => void }) {
@@ -63,6 +64,13 @@ export function Report({ onBack }: { onBack: () => void }) {
             <tbody>
               {[
                 ...levels,
+                ...catalog.map(([title], i) => ({
+                  id: "pdf-" + (i + 1),
+                  title: "错题" + (i + 1) + " · " + title,
+                  icon: "✦",
+                  questions: [],
+                  transfer: [],
+                })),
                 {
                   id: "queue",
                   title: "排队动画专题",

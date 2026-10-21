@@ -2301,3 +2301,421 @@ table td {
     font-size: 10px;
   }
 }
+
+/* Isolated PDF notebook lessons. Existing four labs and queue scenes unchanged. */
+.pdf-feature {
+  background: #eaf4ef;
+  border-color: #b5d7c9;
+}
+.pdf-map,
+.pdf-lesson {
+  padding-top: 28px;
+  padding-bottom: 55px;
+}
+.pdf-map h1,
+.pdf-lesson h1 {
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.35;
+}
+.pdf-map section {
+  margin: 35px 0;
+}
+.pdf-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.pdf-card {
+  text-align: left;
+  background: #fffdf7;
+  border: 1px solid #dbe5dd;
+  padding: 22px;
+  border-radius: 20px;
+  min-height: 160px;
+  box-shadow: 0 4px 0 #e8ede5;
+}
+.pdf-card:hover {
+  border-color: #4a8b74;
+  transform: translateY(-2px);
+}
+.pdf-card > span {
+  display: flex;
+  justify-content: space-between;
+  color: #698278;
+  font-size: 14px;
+}
+.pdf-card h3 {
+  margin: 15px 0;
+  font-size: 23px;
+}
+.pdf-card p {
+  font-size: 14px;
+  color: #55796b;
+}
+.pdf-config {
+  padding: 18px 22px;
+  background: #edf3eb;
+  border: 1px solid #d3dfd1;
+  border-radius: 16px;
+  margin: 20px 0;
+}
+.pdf-config summary {
+  cursor: pointer;
+  min-height: 30px;
+  font-weight: 700;
+}
+.pdf-field-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+.pdf-field-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pdf-field-grid input,
+.pdf-answer input,
+.pdf-answer select {
+  font: inherit;
+  background: white;
+  border: 2px solid #bdcfc4;
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 0;
+  min-height: 48px;
+  width: 100%;
+}
+.pdf-state {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #55796b;
+  font-weight: 700;
+  margin: 24px 0 14px;
+}
+.pdf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.pdf-controls button,
+.pdf-scene-tools button,
+.goods-controls button,
+.pdf-navigation button {
+  min-height: 48px;
+  border-radius: 12px;
+  padding: 10px 18px;
+}
+.pdf-controls button {
+  background: #fffaf0;
+  border: 1px solid #cddacf;
+}
+.pdf-intro {
+  text-align: center;
+  padding: clamp(24px, 5vw, 65px);
+}
+.pdf-intro p {
+  max-width: 650px;
+  margin: 20px auto;
+  line-height: 1.9;
+  font-size: 19px;
+}
+.pdf-intro-icon {
+  font-size: 64px;
+  color: #4b9075;
+}
+.pdf-task-heading {
+  padding: 15px 0;
+}
+.pdf-task-heading > span {
+  font-size: 14px;
+  color: #68877a;
+}
+.pdf-task-heading h2 {
+  font-size: clamp(21px, 3vw, 29px);
+  line-height: 1.7;
+}
+.pdf-stage {
+  padding: 18px;
+  overflow: hidden;
+}
+.pdf-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 620px;
+  touch-action: pan-y;
+  overflow: visible;
+}
+.pdf-svg [role="button"]:focus-visible {
+  outline: 3px solid #a46a20;
+  outline-offset: 4px;
+}
+.pdf-scene-tools {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.pdf-scene-tools span {
+  font-size: 14px;
+  color: #60746c;
+}
+.pdf-direction,
+.pdf-shop-rule {
+  background: #eef4ed;
+  border-radius: 10px;
+  padding: 14px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+.pdf-scroll {
+  overflow-x: auto;
+  padding-top: 35px;
+  padding-bottom: 15px;
+}
+.pdf-answer {
+  margin-top: 18px;
+  display: flex;
+  align-items: end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.pdf-answer label {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-width: 180px;
+  font-size: 18px;
+}
+.pdf-answer input,
+.pdf-answer select {
+  max-width: 380px;
+  font-size: 23px;
+}
+.pdf-answer .button-row {
+  flex-wrap: wrap;
+  margin: 0;
+}
+.pdf-narration,
+.pdf-hint,
+.pdf-success,
+.pdf-feedback,
+.pdf-pause {
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: #edf4e9;
+  line-height: 1.9;
+  font-size: 19px;
+  margin: 16px 0;
+}
+.pdf-hint {
+  background: #fff2d8;
+}
+.pdf-pause {
+  border: 2px dashed #b78c42;
+  background: #fff3dc;
+}
+.pdf-navigation {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.pdf-goods {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.pdf-goods article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 8px;
+  border: 1px solid #dfdfd1;
+  border-radius: 16px;
+  background: #fffaf0;
+}
+.goods-icon {
+  display: block;
+  font-size: 52px;
+  line-height: 1.5;
+}
+.pdf-goods h3 {
+  font-size: 17px;
+  text-align: center;
+  margin: 5px 0 12px;
+}
+.pdf-goods strong {
+  font-size: 24px;
+  color: #8b5b31;
+}
+.goods-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+.goods-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+}
+.goods-controls output {
+  font-size: 22px;
+  min-width: 22px;
+  text-align: center;
+}
+.pdf-basket {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  min-height: 62px;
+  border: 2px dashed #b7c8b8;
+  border-radius: 12px;
+  padding: 14px;
+}
+.pdf-basket span {
+  background: #e6eddb;
+  padding: 8px;
+  border-radius: 10px;
+}
+.basket-arrival {
+  animation: pdf-basket-in 0.4s ease-out;
+}
+.is-paused * {
+  animation-play-state: paused !important;
+}
+.pdf-session button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pdf-session button.primary {
+  background: #346c58;
+  color: white;
+}
+.pdf-session button:not(.primary) {
+  border: 1px solid #bfcec1;
+}
+.pdf-stage .footnote {
+  font-size: 13px;
+}
+.pdf-config [role="alert"] {
+  color: #9d4729;
+}
+.pdf-session [inert] {
+  opacity: 0.65;
+}
+@keyframes pdf-basket-in {
+  from {
+    transform: translateY(-35px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@media (max-width: 700px) {
+  .pdf-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pdf-field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pdf-card {
+    padding: 16px;
+    min-height: 160px;
+  }
+  .pdf-card h3 {
+    font-size: 20px;
+  }
+  .pdf-stage {
+    padding: 10px;
+  }
+  .pdf-goods {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pdf-answer {
+    padding: 18px;
+  }
+  .pdf-controls button {
+    font-size: 14px;
+    padding: 10px 13px;
+  }
+  .pdf-state {
+    font-size: 14px;
+  }
+  .pdf-svg {
+    max-height: none;
+  }
+  .pdf-navigation button {
+    flex: 1;
+  }
+  .pdf-map .lead {
+    font-size: 17px;
+  }
+  .pdf-goods article {
+    min-width: 0;
+  }
+  .goods-controls {
+    gap: 7px;
+  }
+  .goods-controls button {
+    padding: 8px;
+    min-width: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .basket-arrival {
+    animation: none;
+  }
+  .pdf-card:hover {
+    transform: none;
+  }
+}
+.pdf-stage {
+  overflow: auto;
+}
+.pdf-stage > .pdf-svg {
+  min-width: 680px;
+}
+.pdf-scroll > .pdf-svg {
+  min-width: 680px;
+}
+.pdf-stage [role="button"] {
+  touch-action: manipulation;
+}
+.pdf-price-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fff0d2;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+.pdf-price-line span {
+  padding: 6px 9px;
+  border: 1px solid #dcc79d;
+  border-radius: 8px;
+  font-size: 15px;
+}
+.pdf-demo-total {
+  font-size: 21px;
+  font-weight: bold;
+  padding: 14px;
+  background: #e2efdd;
+  border-radius: 10px;
+}
+/* Allow native horizontal panning within wide scenes on iPhone. */
+.pdf-svg {
+  touch-action: manipulation;
+}
