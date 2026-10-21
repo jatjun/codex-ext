@@ -1,0 +1,60 @@
+name: Math Adventure · checks and Pages
+
+on:
+  push:
+    branches: [main, codex/math-adventure-v1]
+    paths: ["math-adventure/**", ".github/workflows/math-adventure.yml"]
+  pull_request:
+    paths: ["math-adventure/**", ".github/workflows/math-adventure.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: math-adventure-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: math-adventure
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: math-adventure/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: math-adventure-browser-results
+          path: math-adventure/test-results/
+          if-no-files-found: ignore
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: math-adventure/dist
+  deploy:
+    if: github.event_name != 'pull_request' && vars.MATH_ADVENTURE_PAGES_ENABLED == 'true'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy Math Adventure
+        id: deployment
+        uses: actions/deploy-pages@v4
