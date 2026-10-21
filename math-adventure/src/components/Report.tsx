@@ -1,3 +1,4 @@
+import { allAddresses } from "../notebooks/model";
 import { catalog } from "../pdf/model";
 import { levels } from "../questions/data";
 import { readRecords, report, exportRecords } from "../records/store";
@@ -64,6 +65,18 @@ export function Report({ onBack }: { onBack: () => void }) {
             <tbody>
               {[
                 ...levels,
+                ...allAddresses.map((a) => ({
+                  id: a.id,
+                  title:
+                    (a.book === "a" ? "A" : "B") +
+                    "册" +
+                    a.number +
+                    " · " +
+                    a.title,
+                  icon: "✦",
+                  questions: [],
+                  transfer: [],
+                })),
                 ...catalog.map(([title], i) => ({
                   id: "pdf-" + (i + 1),
                   title: "错题" + (i + 1) + " · " + title,

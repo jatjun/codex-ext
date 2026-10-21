@@ -51,3 +51,31 @@
 - `math-adventure/tests/e2e/pdf.spec.ts`（新增）
 
 本次不新增依赖。原PDF、本地预览截图、孩子学习记录、缓存和构建产物均不提交。
+
+
+## V1.3 两份新错题本修改清单
+
+共20个项目文件；原四关、排队、21题、根目录测试网页和工作流保留。
+
+- `math-adventure/README.md`
+- `math-adventure/docs/FILES.md`
+- `math-adventure/docs/TEACHING_DESIGN.md`
+- `math-adventure/docs/TWO_NOTEBOOKS.md`
+- `math-adventure/docs/VALIDATION.md`
+- `math-adventure/package-lock.json`
+- `math-adventure/package.json`
+- `math-adventure/src/App.tsx`
+- `math-adventure/src/components/Report.tsx`
+- `math-adventure/src/notebooks/Lab.tsx`
+- `math-adventure/src/notebooks/Scene.tsx`
+- `math-adventure/src/notebooks/geometry.ts`
+- `math-adventure/src/notebooks/model.ts`
+- `math-adventure/src/notebooks/types.ts`
+- `math-adventure/src/pdf/Lab.tsx`
+- `math-adventure/src/pdf/Scene.tsx`
+- `math-adventure/src/pdf/model.ts`
+- `math-adventure/src/styles/main.css`
+- `math-adventure/tests/e2e/notebooks.spec.ts`
+- `math-adventure/tests/notebooks.test.ts`
+
+新增模块见 TWO_NOTEBOOKS.md；已有教学会话通过可选参数扩展，旧题接口保持兼容。依赖清单仅更新版本号，没有安装新运行依赖。

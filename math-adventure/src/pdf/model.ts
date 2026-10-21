@@ -1,3 +1,4 @@
+import type { ExtensionScene } from "../notebooks/types";
 /** Hand-checked against all twelve rendered PDF pages. No source PDF or personal data shipped. */
 export type Shape =
   | "正方形"
@@ -24,6 +25,7 @@ export type Item = {
   kind?: string;
 };
 export type Scene =
+  | ExtensionScene
   | { type: "pieces"; pieces: Piece[]; title: string; original: boolean }
   | {
       type: "line";
@@ -53,6 +55,7 @@ export type Task = {
   hint: string;
   explanation: string;
   options?: string[];
+  accepted?: string[];
   pick?: string[];
   basket?: "min" | "max" | "offer" | "specified";
   counts?: number[];
@@ -865,11 +868,13 @@ export function checkTask(
   return (
     answer.trim() !== "" &&
     (answer.trim() === t.answer ||
+      !!t.accepted?.includes(answer.trim()) ||
       (!Number.isNaN(Number(t.answer)) &&
         Number(answer.trim()) === Number(t.answer)))
   );
 }
 export function observation(scene: Scene) {
+  if (scene.type === "extension") return scene.frames;
   return [
     {
       text:

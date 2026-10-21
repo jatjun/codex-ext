@@ -154,12 +154,14 @@ export function PdfLesson({ id, onExit }: { id: number; onExit: () => void }) {
     </main>
   );
 }
-function PdfSession({
+export function PdfSession({
   lesson,
   values,
   onExit,
+  alternatives,
 }: {
   lesson: Lesson;
+  alternatives?: { transfer: Lesson; retry: Lesson; recordId: string };
   values: Record<string, number>;
   onExit: () => void;
 }) {
@@ -179,12 +181,12 @@ function PdfSession({
     [explained, setExplained] = useState(false);
   const narrator = useMemo(() => new Narrator(), []),
     transfer = useMemo(
-      () => buildLesson(lesson.id, values, true),
-      [lesson, values],
+      () => alternatives?.transfer ?? buildLesson(lesson.id, values, true),
+      [lesson, values, alternatives],
     );
   const retryLesson = useMemo(
-    () => buildRetryLesson(lesson.id, values),
-    [lesson, values],
+    () => alternatives?.retry ?? buildRetryLesson(lesson.id, values),
+    [lesson, values, alternatives],
   );
   const session = useRef(crypto.randomUUID()),
     records = useRef<Record<string, RecordEntry>>({}),
@@ -224,7 +226,7 @@ function PdfSession({
     if (!records.current[key]) {
       const r = newEntry(
         session.current,
-        "pdf-" + lesson.id,
+        alternatives?.recordId ?? "pdf-" + lesson.id,
         key,
         key.startsWith("transfer-"),
       );
@@ -562,6 +564,7 @@ function PdfSession({
           </div>
           <div className="paper pdf-stage" inert={paused || undefined}>
             <PdfScene
+              paused={paused}
               scene={activeLesson.scene}
               task={currentTask}
               frame={view.frame}

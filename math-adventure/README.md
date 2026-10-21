@@ -1,6 +1,12 @@
-# Math Adventure｜数学错题动画实验室 V1.2
+# Math Adventure｜数学错题动画实验室 V1.3
 
 面向8～10岁孩子的中文数学动画原型：**看得见 → 动手操作 → 说出道理 → 独立再做**。本项目独立保存在 `math-adventure/`，不调用 KidsLearningHub、KidsSharedCore、AgentOrchestrator、其他 Worker 或任何大模型 API。
+
+## 两份新错题本（V1.3新增）
+
+首页点击**进入两份新错题本**，按A册（质量与应用，01:25:33）和B册（运算与空间，01:24:05）各25题选择。数字、质量、数量、价格、速度、折叠尺寸、观察方向、平移距离、旋转角度及排列方案均有对应调整。新增真实沿棱3D折叠、体素投影、半边对折、玫瑰平移重合、乘客上下车、质量包拆分与运算树动画。保留原四关、排队专题、原21题以及全部旧学习记录。
+
+完整逐题核对、操作、参数、几何算法与扩展方法见 [TWO_NOTEBOOKS.md](docs/TWO_NOTEBOOKS.md)。旧版已备份至远程分支 `backup/math-adventure-before-two-books-2026-10-22`（`4cc0e6a`）。
 
 ## 错题本动画（V1.2新增）
 
@@ -42,6 +48,7 @@ math-adventure/
     animation/              # 时钟、观察脚本、语音完成屏障
     audio/                  # 原生中文语音封装
     components/             # 数字配置、共用教学会话、家长报告
+    notebooks/              # 新50题模型、几何算法与动画
     pdf/                    # 21题错题本模型、动画与教学会话
     questions/              # 默认题目、参数、生成器、排队数学与校验
     records/store.ts        # 首次答案保留、本地存储与统计

@@ -1,3 +1,4 @@
+import { AdvancedScene } from "../notebooks/Scene";
 import type { CSSProperties } from "react";
 import {
   demonstrationCounts,
@@ -78,6 +79,7 @@ function Solid({ kind }: { kind: string }) {
 }
 export function PdfScene({
   scene,
+  paused = false,
   task,
   frame,
   progress,
@@ -92,6 +94,7 @@ export function PdfScene({
   demonstrating,
 }: {
   scene: Scene;
+  paused?: boolean;
   task: Task;
   frame: number;
   progress: number;
@@ -105,6 +108,23 @@ export function PdfScene({
   counting: boolean;
   demonstrating: boolean;
 }) {
+  if (scene.type === "extension")
+    return (
+      <AdvancedScene
+        spec={scene.spec}
+        task={task}
+        frame={frame}
+        progress={progress}
+        running={running}
+        paused={paused}
+        selected={selected}
+        onSelect={onSelect}
+        grouped={grouped}
+        onGroup={onGroup}
+        counting={counting}
+        demonstrating={demonstrating}
+      />
+    );
   const stage = running
     ? frame === 0
       ? 0

@@ -1,3 +1,5 @@
+import { NotebookMap, NotebookLesson } from "./notebooks/Lab";
+import type { Address } from "./notebooks/types";
 import { useState } from "react";
 import { PdfMap, PdfLesson } from "./pdf/Lab";
 import { levels, type LevelId } from "./questions/data";
@@ -16,9 +18,12 @@ function Brand() {
   );
 }
 export default function App() {
+  const [notebook, setNotebook] = useState<Address | null>(null);
   const [pdfId, setPdfId] = useState<number | null>(null);
   const [queueKind, setQueueKind] = useState<QueueKind | null>(null);
-  const [page, setPage] = useState<LevelId | "home" | "report" | "pdf">("home"),
+  const [page, setPage] = useState<
+      LevelId | "home" | "report" | "pdf" | "notebooks"
+    >("home"),
     [visit, setVisit] = useState(0);
   const completed = (id: LevelId) => {
     const l = levels.find((l) => l.id === id)!,
@@ -35,6 +40,7 @@ export default function App() {
     setPage(p);
     setQueueKind(null);
     setPdfId(null);
+    setNotebook(null);
     setVisit((v) => v + 1);
     window.scrollTo({ top: 0 });
   };
@@ -113,6 +119,18 @@ export default function App() {
               <span className="lab-triangle">△</span>
               <span className="lab-coin">¥</span>
             </div>
+          </section>
+          <section className="queue-feature nb-feature">
+            <div>
+              <span className="eyebrow">NEW / 两份新错题本</span>
+              <h2>50道题，探索单位、运算与空间。</h2>
+              <p>
+                质量换算、两种方法、混合运算、立体折叠、观察视角、平移旋转与轴对称。
+              </p>
+            </div>
+            <button className="primary" onClick={() => navigate("notebooks")}>
+              进入两份新错题本 →
+            </button>
           </section>
           <section className="queue-feature pdf-feature">
             <div>
@@ -224,6 +242,25 @@ export default function App() {
             </span>
           </section>
         </main>
+      ) : page === "notebooks" ? (
+        notebook ? (
+          <NotebookLesson
+            key={notebook.book + notebook.number + ":" + visit}
+            address={notebook}
+            onExit={() => {
+              setNotebook(null);
+              window.scrollTo({ top: 0 });
+            }}
+          />
+        ) : (
+          <NotebookMap
+            onChoose={(a) => {
+              setNotebook(a);
+              window.scrollTo({ top: 0 });
+            }}
+            onBack={() => navigate("home")}
+          />
+        )
       ) : page === "pdf" ? (
         pdfId ? (
           <PdfLesson
@@ -262,7 +299,7 @@ export default function App() {
         <p>
           为好奇心留一点空间。<span>学习记录仅保存在你的浏览器中。</span>
         </p>
-        <span className="version">探索版 V1.2 · 适合 8–10 岁</span>
+        <span className="version">探索版 V1.3 · 适合 8–10 岁</span>
       </footer>
     </>
   );
