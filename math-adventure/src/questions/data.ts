@@ -1,8 +1,10 @@
-export type LevelId = "shop" | "shapes" | "detective" | "square";
+import type { LessonModel } from "./models";
+export type LevelId = "shop" | "shapes" | "detective" | "square" | "queue";
 export type Question = {
   id: string;
   prompt: string;
   answer: string;
+  answerKind?: "set";
   options?: string[];
   hints: [string, string, string];
   retry: { prompt: string; answer: string };
@@ -20,6 +22,8 @@ export type Level = {
   summary: string;
   questions: Question[];
   transfer: Question[];
+  model?: LessonModel;
+  transferModel?: LessonModel;
 };
 const q = (
   id: string,

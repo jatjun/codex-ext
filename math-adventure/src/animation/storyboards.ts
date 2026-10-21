@@ -1,48 +1,63 @@
 import type { Frame } from "./timeline";
-import type { LevelId } from "../questions/data";
+import { defaults, type LessonModel } from "../questions/models";
+import { queueFrames } from "../questions/queue";
 const f = (text: string, duration = 1400): Frame => ({ text, duration });
-export const storyboards: Record<LevelId, Frame[]> = {
-  shop: [
-    f("欢迎来到玩具商店。每只玩具需要3元。"),
-    f("第一只玩具进篮子，3枚金币走到收银台。"),
-    f("第二只玩具进篮子，再付3枚金币，现在一共6枚。"),
-    f("第三只玩具进篮子，现在一共9枚金币。"),
-    f("第四只玩具进篮子，现在一共12枚金币。"),
-    f(
-      "乐乐也花了这12元。金币从收银台来到分配区，等你来平均分给两只玩具。",
-      1800,
-    ),
-  ],
-  shapes: [
-    f("三个相同的星星，对应18枚能量点。"),
-    f("让18枚能量点，平均飞入三个等大的格子。", 2800),
-    f("每颗星星有6点能量。18除以3等于6。"),
-    f("再看看四个相同的三角形，对应16枚能量点。"),
-    f("让16枚能量点，平均飞入四个格子。", 2800),
-    f("每个三角形有4点能量。接下来，请你解开计算台的密码。"),
-  ],
-  detective: [
-    f("20位动物朋友来到了这里。仔细看看它们的样子。"),
-    f("先按种类分类。可以拖动，也可以先点一只动物，再点下面的分类框。"),
-    f("每位朋友只能放进一个框。分完后，还要检查总数量。"),
-  ],
-  square: [
-    ...Array.from({ length: 5 }, (_, r) =>
+export function makeStoryboards(model: LessonModel = defaults) {
+  const s = model.shop,
+    sh = model.shapes,
+    d = model.detective,
+    rank = model.square.rank,
+    side = rank * 2 - 1;
+  return {
+    shop: [
+      f(`欢迎来到玩具商店。每只玩具需要${s.price}元。`),
+      ...Array.from({ length: s.count }, (_, i) =>
+        f(
+          `第${i + 1}只玩具进篮子，付${s.price}枚金币，现在共${(i + 1) * s.price}枚。`,
+        ),
+      ),
       f(
-        r === 0
-          ? "同学们依次走进操场。第一行有5人。"
-          : "第" + (r + 1) + "行也有5人。",
-        1300,
+        `乐乐也花了这${s.count * s.price}元。金币来到分配区，等你平均分给${s.groups}只玩具。`,
+        1800,
       ),
-    ),
-    ...["从前往后", "从后往前", "从左往右", "从右往左"].flatMap((d) =>
-      [1, 2, 3].map((n) =>
-        f(d + "数：" + n + "。" + (n === 3 ? "找到中间的小朋友。" : ""), 950),
+    ],
+    shapes: [
+      f(`${sh.stars}颗星星，对应${sh.stars * sh.starValue}枚能量点。`),
+      f(`把能量点平均分入${sh.stars}个同大格子。`, 2800),
+      f(`每颗星星有${sh.starValue}点能量。`),
+      f(
+        `${sh.triangles}个三角形，对应${sh.triangles * sh.triangleValue}枚能量点。`,
       ),
-    ),
-    ...Array.from({ length: 5 }, (_, r) =>
-      f("第" + (r + 1) + "行，每行5人。", 950),
-    ),
-    f("五行，每行五人。这是实心方阵，里面也站着同学。请你算一算总人数。"),
-  ],
-};
+      f(`把能量点平均分入${sh.triangles}个格子。`, 2800),
+      f(`每个三角形有${sh.triangleValue}点能量。请解开计算台的密码。`),
+    ],
+    detective: [
+      f(
+        `${d.butterflies + d.dragonflies + d.fish}位动物朋友来到了这里，看看它们的样子。`,
+      ),
+      f("先按种类分类。可以拖动，或先点朋友，再点分类框顶部按钮。"),
+      f("每位朋友只放进一个框，分完后检查总数。"),
+    ],
+    square: [
+      ...Array.from({ length: side }, (_, r) =>
+        f(`第${r + 1}行，每行${side}位小朋友依次入场。`, 1300),
+      ),
+      ...["从前往后", "从后往前", "从左往右", "从右往左"].flatMap((dir) =>
+        Array.from({ length: rank }, (_, k) =>
+          f(
+            `${dir}数：${k + 1}。${k + 1 === rank ? "找到同一个中间小朋友。" : ""}`,
+            850,
+          ),
+        ),
+      ),
+      ...Array.from({ length: side }, (_, r) =>
+        f(`高亮第${r + 1}行，每行${side}人。`, 850),
+      ),
+      f("这是实心队伍，里面也有人。请你算一算总人数。"),
+    ],
+    queue: model.queue
+      ? queueFrames(model.queue)
+      : [f("选择一种排队题，开始探索。")],
+  };
+}
+export const storyboards = makeStoryboards();

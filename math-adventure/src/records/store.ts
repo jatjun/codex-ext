@@ -11,6 +11,10 @@ export type RecordEntry = {
   dateTime: string;
   levelId: string;
   questionId: string;
+  questionText?: string;
+  parameters?: string;
+  lessonTitle?: string;
+  requiredQuestionIds?: string[];
   firstAnswer: string | null;
   firstCorrect: boolean | null;
   attempts: number;
@@ -124,6 +128,8 @@ export function exportRecords(records: RecordEntry[], format: "json" | "csv") {
     "session",
     "levelId",
     "questionId",
+    "questionText",
+    "parameters",
     "firstAnswer",
     "firstCorrect",
     "attempts",

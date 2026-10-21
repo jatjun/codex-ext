@@ -1915,3 +1915,389 @@ table td {
     scroll-behavior: auto !important;
   }
 }
+
+/* Configurable lessons and queue explorer. */
+.configuration {
+  margin-top: 22px;
+}
+.configuration details {
+  border: 1px solid #d5dfcc;
+  background: #edf2e7;
+  border-radius: 15px;
+  padding: 15px 20px;
+}
+.configuration summary {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 650;
+  min-height: 44px;
+  align-content: center;
+}
+.configuration details > p {
+  font-size: 14px;
+  color: #74836d;
+  margin: 10px 0 17px;
+}
+.number-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+.number-fields label,
+.order-select {
+  font-size: 14px;
+  color: #5c7158;
+  display: grid;
+  gap: 7px;
+}
+.number-fields input,
+.order-select select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #bccbb0;
+  background: #fffef9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 19px;
+  min-height: 48px;
+  color: #354d36;
+}
+.order-select {
+  max-width: 440px;
+  margin: 15px 0;
+}
+.configuration-errors {
+  background: #fbefd8;
+  padding: 14px;
+  border-radius: 10px;
+  color: #866e3e;
+  margin: 15px 0;
+  font-size: 15px;
+}
+.configuration-status {
+  font-size: 14px;
+  color: #5e7953;
+  margin-top: 14px;
+}
+.queue-feature {
+  border: 1px solid #d4dfcf;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #e9efe0, #e0e9ed);
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 40px;
+}
+.queue-feature h2 {
+  margin: 11px 0;
+}
+.queue-feature p {
+  color: #74836d;
+  font-size: 15px;
+}
+.queue-feature .primary {
+  white-space: nowrap;
+}
+.queue-map {
+  padding-top: 28px;
+  padding-bottom: 45px;
+}
+.queue-map > .eyebrow {
+  margin: 25px 0 14px;
+}
+.queue-map h1 {
+  font-size: 37px;
+}
+.queue-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.queue-type-card {
+  text-align: left;
+  min-width: 0;
+  padding: 23px;
+  background: #fffcf5;
+  border-color: #d6dfcd;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 285px;
+}
+.queue-type-icon {
+  font-size: 34px;
+  color: #58795f;
+  line-height: 1.1;
+  margin-bottom: 17px;
+}
+.queue-type-card small {
+  font-size: 11px;
+  color: #8d9a7a;
+  letter-spacing: 1px;
+}
+.queue-type-card h2 {
+  font-size: 21px;
+  margin: 10px 0;
+}
+.queue-type-card p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #839078;
+  margin-bottom: 22px;
+}
+.queue-type-card > span:last-child {
+  margin-top: auto;
+  font-size: 14px;
+  color: #536f4c;
+}
+.queue-scene {
+  background: #f7faf2;
+}
+.queue-legend {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #708066;
+  margin: 15px 0;
+}
+.ming-dot,
+.hong-dot,
+.between-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #df9874;
+}
+.hong-dot {
+  background: #b696d0;
+  margin-left: 12px;
+}
+.between-dot {
+  background: #e3c46a;
+  margin-left: 12px;
+}
+.order-note {
+  background: #f3eedf;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.order-note button {
+  font-size: 13px;
+  margin-top: 9px;
+}
+.order-note button[aria-pressed="true"] {
+  background: #e2ebd9;
+  border-color: #8ba37c;
+}
+.queue-scroll-note {
+  font-size: 13px;
+  color: #8a987a;
+  margin: 15px 0 3px;
+}
+.queue-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  border: 1px solid #dce3d3;
+  border-radius: 13px;
+  background: linear-gradient(
+    #edf3e6 76%,
+    #d7e2cc 76%,
+    #d7e2cc 78%,
+    #edf3e6 78%
+  );
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+.queue-strip {
+  position: relative;
+  height: 212px;
+  min-width: 100%;
+}
+.queue-person {
+  position: absolute;
+  min-height: 139px;
+  width: 50px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none !important;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: none;
+  touch-action: manipulation;
+}
+.queue-person:disabled {
+  opacity: 1;
+}
+.queue-person svg {
+  width: 45px;
+  height: 70px;
+}
+.queue-person.counted {
+  background: #f4dfa0;
+  border-color: #d9be65;
+}
+.rank-badge {
+  width: 30px;
+  height: 30px;
+  line-height: 27px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 18px;
+  background: #e0e8d7;
+  color: #4f6a4a;
+  margin-bottom: 4px;
+}
+.counted .rank-badge {
+  background: #59775c;
+  color: white;
+}
+.person-name {
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 22px;
+  white-space: nowrap;
+}
+.queue-person.ming .person-name {
+  color: #a36e42;
+  font-weight: 700;
+}
+.queue-person.hong .person-name {
+  color: #86609e;
+  font-weight: 700;
+}
+.queue-count-controls {
+  border-top: 1px solid #dce3d3;
+  padding-top: 16px;
+}
+.queue-count-controls > p {
+  font-size: 14px;
+  color: #7a896f;
+  margin: 8px 0 12px;
+}
+.queue-count-controls .button-row button {
+  font-size: 13px;
+  min-height: 46px;
+}
+.rectangle-board .button-row button {
+  font-size: 12px;
+  min-height: 44px;
+  padding: 9px 11px;
+}
+.rectangle-board .math-svg {
+  overflow: visible;
+}
+.queue-scene .earned-equation {
+  font-size: 18px !important;
+  overflow-wrap: anywhere;
+}
+.queue-scene .scene-math-readout {
+  overflow-wrap: anywhere;
+}
+.toy-strip {
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.toy-strip span {
+  max-width: 90px;
+}
+@media (max-width: 1000px) {
+  .queue-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .number-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .queue-feature {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .configuration details {
+    padding: 13px 16px;
+  }
+  .configuration summary {
+    font-size: 16px;
+  }
+  .number-fields {
+    gap: 13px;
+  }
+  .number-fields label {
+    font-size: 13px;
+  }
+  .configuration .button-row button {
+    flex: 1 1 100%;
+    font-size: 14px;
+  }
+  .queue-feature {
+    padding: 24px 20px;
+    margin-bottom: 30px;
+  }
+  .queue-feature h2 {
+    font-size: 23px;
+  }
+  .queue-feature p {
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .queue-feature .primary {
+    width: 100%;
+    font-size: 15px;
+    white-space: normal;
+  }
+  .queue-map h1 {
+    font-size: 29px;
+  }
+  .queue-card-grid {
+    gap: 12px;
+  }
+  .queue-type-card {
+    padding: 19px 15px;
+    min-height: 280px;
+  }
+  .queue-type-card h2 {
+    font-size: 19px;
+  }
+  .queue-type-card p {
+    font-size: 13px;
+  }
+  .queue-scene .scene-label {
+    font-size: 13px;
+  }
+  .queue-scene .pill {
+    font-size: 10px;
+  }
+  .queue-legend {
+    font-size: 12px;
+    gap: 5px;
+  }
+  .queue-count-controls .button-row button {
+    flex: 1 1 44%;
+  }
+  .queue-scene .earned-equation {
+    font-size: 17px !important;
+  }
+  .configuration .order-select select {
+    font-size: 16px;
+  }
+  .queue-scene .scene-math-readout {
+    font-size: 16px;
+  }
+  .queue-feature .eyebrow {
+    font-size: 10px;
+  }
+}

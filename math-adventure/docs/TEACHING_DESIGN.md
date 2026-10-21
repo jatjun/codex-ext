@@ -1,5 +1,7 @@
 # 教学设计与数学正确性约束
 
+V1.1增加八类排队动画与原四关的数字调整。下文数值是默认示例；参数变化时模型、题干、动画、提示、语音与答案同步生成。排队专题的数学规则及多解处理见 [QUEUE_DESIGN.md](QUEUE_DESIGN.md)。
+
 ## 共同教学流程
 
 `INTRO → OBSERVE → QUESTION`，按需进入 `HINT_1 → HINT_2 → EXPLAIN → RETRY`，完成原题后进入 `TRANSFER → COMPLETE`。

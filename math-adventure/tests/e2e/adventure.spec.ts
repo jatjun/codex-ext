@@ -325,7 +325,7 @@ test("narration barrier holds the picture until speech ends and pause calls nati
   await page.evaluate(() =>
     (window as unknown as { voiceEnd?: () => void }).voiceEnd?.(),
   );
-  await expect(page.locator(".narration")).toContainText("第一只玩具进篮子");
+  await expect(page.locator(".narration")).toContainText("第1只玩具进篮子");
   await page.getByRole("button", { name: "← 冒险地图", exact: true }).click();
   expect(
     await page.evaluate(

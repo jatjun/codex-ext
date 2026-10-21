@@ -49,7 +49,7 @@ export function Report({ onBack }: { onBack: () => void }) {
         ))}
       </div>
       <section className="paper">
-        <h2>四关探索记录</h2>
+        <h2>各关与排队专题探索记录</h2>
         <div className="table-scroll">
           <table>
             <thead>
@@ -61,20 +61,28 @@ export function Report({ onBack }: { onBack: () => void }) {
               </tr>
             </thead>
             <tbody>
-              {levels.map((l) => {
+              {[
+                ...levels,
+                {
+                  id: "queue",
+                  title: "排队动画专题",
+                  icon: "⚑",
+                  questions: [],
+                  transfer: [],
+                },
+              ].map((l) => {
                 const rows = records.filter((r) => r.levelId === l.id),
                   sessions = [...new Set(rows.map((r) => r.session))];
                 const complete = sessions.filter((s) =>
-                  l.questions
-                    .concat(l.transfer)
-                    .every((q) =>
-                      rows.some(
-                        (r) =>
-                          r.session === s &&
-                          r.questionId === q.id &&
-                          r.completed,
-                      ),
+                  (
+                    rows.find((r) => r.session === s)?.requiredQuestionIds ??
+                    [...l.questions, ...l.transfer].map((q) => q.id)
+                  ).every((id) =>
+                    rows.some(
+                      (r) =>
+                        r.session === s && r.questionId === id && r.completed,
                     ),
+                  ),
                 ).length;
                 return (
                   <tr key={l.id}>
@@ -136,6 +144,7 @@ export function Report({ onBack }: { onBack: () => void }) {
                     <small>
                       {r.levelId} / {r.questionId}
                     </small>
+                    {r.questionText && <small>{r.questionText}</small>}
                   </td>
                   <td>
                     {r.firstAnswer ?? "尚未独立作答"}

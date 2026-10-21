@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
+import { defaults, type LessonModel } from "../questions/models";
+import { makeAnimals, makePatterns } from "../questions/builders";
+import { QueueScene } from "./QueueScene";
 import type { ClockSnapshot } from "../animation/timeline";
-import {
-  animals,
-  patterns,
-  type LevelId,
-  type Question,
-} from "../questions/data";
+import { type LevelId, type Question } from "../questions/data";
 
 export type SceneProps = {
   level: LevelId;
+  model: LessonModel;
   question: Question;
   index: number;
   transfer: boolean;
@@ -46,6 +45,7 @@ function Coin({
 }) {
   return (
     <g
+      data-coin={n}
       transform={"translate(" + x + " " + y + ")"}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -90,69 +90,94 @@ function Toy({ x, y, label }: { x: number; y: number; label?: string }) {
   );
 }
 function Shop(p: SceneProps) {
-  const { animation: a, coins, setCoins, paused, selected, setSelected } = p;
+  const a = p.animation,
+    { count, price, groups } = p.model.shop,
+    total = count * price,
+    each = total / groups;
   const observing = p.observing || (p.guiding && p.question.id === "total");
   const canShare =
     !observing && !p.transfer && p.question.interaction === "coins";
   const demo = p.guiding && !p.transfer && p.question.id === "share";
-  const demoCount = demo
-    ? Math.min(12, p.animation.frame + (p.animation.progress >= 0.6 ? 1 : 0))
-    : 0;
-  const displayCoins = demo
-    ? range(12).map((i) => (i < demoCount ? i % 2 : null))
-    : coins;
-  const count = (side: number) => displayCoins.filter((v) => v === side).length;
-  const give = (side: number) => {
-    if (paused || !canShare || demo || p.solved) return;
-    const idx = selected?.startsWith("coin")
-      ? Number(selected.slice(4))
-      : coins.indexOf(null);
-    if (idx < 0 || coins[idx] !== null) return;
-    const next = [...coins];
-    next[idx] = side;
-    setCoins(next);
-    setSelected(null);
+  const demoCount = Math.min(total, a.frame + (a.progress >= 0.6 ? 1 : 0));
+  const display = demo
+    ? range(total).map((i) => (i < demoCount ? i % groups : null))
+    : p.coins;
+  const numbers = range(groups).map(
+    (g) => display.filter((v) => v === g).length,
+  );
+  const cols = Math.min(6, Math.max(3, Math.floor((580 / groups - 30) / 30)));
+  const basketHeight = Math.max(
+    169,
+    90 + Math.ceil(Math.max(each, ...numbers) / cols) * 29,
+  );
+  const give = (g: number) => {
+    if (p.paused || !canShare || demo || p.solved) return;
+    const chosen = p.selected?.startsWith("coin")
+      ? Number(p.selected.slice(4))
+      : p.coins.indexOf(null);
+    if (chosen < 0 || p.coins[chosen] !== null) return;
+    const next = [...p.coins];
+    next[chosen] = g;
+    p.setCoins(next);
+    p.setSelected(null);
   };
-  const placedToy = observing ? Math.max(0, Math.min(4, a.frame)) : 4;
+  const toys = observing ? Math.max(0, Math.min(count, a.frame)) : count;
   const paid = observing
     ? a.frame === 0
       ? 0
-      : a.frame <= 4
-        ? (a.frame - 1) * 3 + Math.min(3, Math.floor(a.progress * 3.99))
-        : 12
-    : 12;
+      : a.frame <= count
+        ? (a.frame - 1) * price +
+          Math.min(price, Math.floor(a.progress * (price + 0.99)))
+        : total
+    : total;
+  const source = (i: number) => ({
+    x: 75 + (i % 8) * 70,
+    y: 282 + Math.floor(i / 8) * 34,
+  });
+  const checkout = (i: number) => ({
+    x: 372 + (i % 8) * 29,
+    y: 105 + Math.floor(i / 8) * 30,
+  });
   return (
     <div className="scene shop-scene">
       <div className="scene-top">
         <span className="scene-label">小熊玩具铺</span>
-        <span className="pill">每只 3 元</span>
+        <span className="pill">每只 {price} 元</span>
       </div>
       {!p.transfer && (
         <p className="scene-math-readout" aria-live="polite">
-          每只 3 元 · 阳阳已付 {paid} 元
+          每只 {price} 元 · 阳阳已付 {paid} 元
         </p>
       )}
       {p.transfer ? (
         <div className="transfer-sketch">
-          <p>新的购物篮，试着自己画一画、算一算。</p>
+          <p>新购物篮，先自己画一画、算一算。</p>
           <div className="toy-strip">
-            {range(3).map((i) => (
+            {range(count).map((i) => (
               <span key={i}>
-                🧸<small>4元</small>
+                🧸<small>{price}元</small>
               </span>
             ))}
           </div>
-          <p>同样的钱 → 另买 2 只玩具</p>
+          <p>同样的钱 → 另买 {groups} 只玩具</p>
           <div className="toy-strip">
-            <span>🧸</span>
-            <span>🧸</span>
+            {range(groups).map((i) => (
+              <span key={i}>🧸</span>
+            ))}
           </div>
         </div>
       ) : (
         <svg
-          viewBox="0 0 640 400"
+          viewBox={"0 0 640 " + (401 + basketHeight)}
           className="math-svg"
-          aria-label="4只玩具，每只3元；12枚金币平均分配给两个玩具"
+          aria-label={
+            count +
+            "只玩具，每只" +
+            price +
+            "元；金币平均分给" +
+            groups +
+            "只玩具"
+          }
         >
           <rect
             x="25"
@@ -164,19 +189,19 @@ function Shop(p: SceneProps) {
             stroke="#c59978"
             strokeDasharray="5 5"
           />
-          <text x="35" y="78" fontSize="16" fill="#694c3c">
+          <text x="35" y="78" fontSize="18" fill="#694c3c">
             阳阳的购物篮
           </text>
-          {range(placedToy).map((i) => (
+          {range(toys).map((i) => (
             <Toy
               key={i}
               x={
-                i === placedToy - 1 && observing && a.frame <= 4
-                  ? lerp(-30, 65 + i * 65, a.progress)
-                  : 65 + i * 65
+                i === toys - 1 && observing && a.frame <= count
+                  ? lerp(-30, 48 + (i * 250) / count, a.progress)
+                  : 48 + (i * 250) / count
               }
               y={120}
-              label="3元"
+              label={price + "元"}
             />
           ))}
           <rect
@@ -188,150 +213,166 @@ function Shop(p: SceneProps) {
             fill="#fff9e9"
             stroke="#d5bd81"
           />
-          <text x="365" y="69" fontSize="16" fill="#694c3c">
-            {observing && a.frame <= 4
+          <text x="355" y="69" fontSize="18" fill="#694c3c">
+            {observing && a.frame <= count
               ? "收银台：" + paid + " 枚金币"
-              : "总钱数：12 元"}
+              : "总钱数：" + total + " 元"}
           </text>
           {observing &&
-            a.frame <= 4 &&
+            a.frame <= count &&
             range(paid).map((i) => (
               <Coin
                 key={i}
                 n={i}
                 x={lerp(
                   290,
-                  377 + (i % 6) * 40,
-                  Math.min(1, a.progress * 3 - (i % 3) + 1),
+                  checkout(i).x,
+                  Math.min(1, a.progress * price - (i % price) + 1),
                 )}
-                y={113 + Math.floor(i / 6) * 42}
+                y={checkout(i).y}
               />
             ))}
-          <text x="28" y="215" className="equation">
-            {observing && a.frame < 5 ? "每只3元，逐只付钱" : "4 × 3 ＝ 12 元"}
+          <text x="28" y="217" className="equation">
+            {observing && a.frame <= count
+              ? "每只" + price + "元，逐只付钱"
+              : count + " × " + price + " ＝ " + total + " 元"}
           </text>
-          <text x="28" y="250" fontSize="16" fill="#694c3c">
-            乐乐：同样的总钱数，买2只玩具
+          <text x="28" y="252" fontSize="18" fill="#694c3c">
+            乐乐：同样的钱，买{groups}只玩具；待分金币
           </text>
           <rect
-            x="23"
-            y="268"
-            width="594"
-            height="112"
-            rx="18"
-            fill="#fff5e5"
+            x="28"
+            y="262"
+            width="584"
+            height="108"
+            rx="15"
+            fill="#fff5df"
           />
-          {[0, 1].map((side) => (
-            <g key={side}>
-              <rect
-                x={side === 0 ? 28 : 438}
-                y="274"
-                width="172"
-                height="100"
-                rx="14"
-                fill="#f4e0c9"
-                stroke="#d9b48f"
-              />
-              <Toy x={side === 0 ? 61 : 472} y={310} />
-              <text
-                x={side === 0 ? 116 : 525}
-                y="298"
-                fontSize="15"
-                fill="#694c3c"
-              >
-                {count(side)} 枚
-              </text>
-              {range(12)
-                .filter((i) => displayCoins[i] === side)
-                .map((i, j) => (
-                  <Coin
-                    key={i}
-                    n={i}
-                    x={(side === 0 ? 85 : 495) + (j % 4) * 28}
-                    y={316 + Math.floor(j / 4) * 24}
-                  />
-                ))}
-            </g>
-          ))}
-          {(!observing || a.frame >= 5) &&
-            range(12)
-              .filter((i) => displayCoins[i] === null)
+          {(!observing || a.frame > count) &&
+            range(total)
+              .filter((i) => display[i] === null)
               .map((i) => (
                 <Coin
                   key={i}
                   n={i}
                   x={
                     observing
-                      ? lerp(377 + (i % 6) * 40, 237 + (i % 4) * 43, a.progress)
-                      : 237 + (i % 4) * 43
+                      ? lerp(checkout(i).x, source(i).x, a.progress)
+                      : source(i).x
                   }
                   y={
                     observing
-                      ? lerp(
-                          113 + Math.floor(i / 6) * 42,
-                          282 + Math.floor(i / 4) * 38,
-                          a.progress,
-                        )
-                      : 282 + Math.floor(i / 4) * 38
+                      ? lerp(checkout(i).y, source(i).y, a.progress)
+                      : source(i).y
                   }
-                  selected={selected === "coin" + i}
+                  selected={p.selected === "coin" + i}
                   onClick={
-                    canShare && !paused && !demo
-                      ? () => setSelected("coin" + i)
+                    canShare && !p.paused && !demo
+                      ? () => p.setSelected("coin" + i)
                       : undefined
                   }
                 />
               ))}
+          {range(groups).map((g) => {
+            const left = 25 + (g * 600) / groups,
+              width = 580 / groups;
+            return (
+              <g key={g}>
+                <rect
+                  x={left}
+                  y="389"
+                  width={width}
+                  height={basketHeight}
+                  rx="16"
+                  fill="#f4e0c9"
+                  stroke="#d9b48f"
+                />
+                <Toy x={left + width / 2} y={420} />
+                <text
+                  x={left + width / 2}
+                  y="452"
+                  textAnchor="middle"
+                  fontSize="19"
+                >
+                  {numbers[g]} 枚
+                </text>
+                {range(total)
+                  .filter((i) => display[i] === g)
+                  .map((i, j) => {
+                    return (
+                      <Coin
+                        key={i}
+                        n={i}
+                        x={
+                          left + width / 2 + ((j % cols) - (cols - 1) / 2) * 30
+                        }
+                        y={479 + Math.floor(j / cols) * 29}
+                      />
+                    );
+                  })}
+              </g>
+            );
+          })}
         </svg>
       )}
       {canShare && (
         <div className="coin-controls">
-          <p>先点一枚金币，再点玩具；也可以直接点下面按钮，每次分1枚。</p>
+          <p>先点金币再点下面按钮，也可以直接点按钮，每次分1枚。</p>
           <div className="button-row">
-            <button
-              disabled={paused || demo || p.solved}
-              onClick={() => give(0)}
-            >
-              给左边玩具 1 枚
-            </button>
-            <button
-              disabled={paused || demo || p.solved}
-              onClick={() => give(1)}
-            >
-              给右边玩具 1 枚
-            </button>
+            {range(groups).map((g) => (
+              <button
+                key={g}
+                disabled={p.paused || demo || p.solved}
+                onClick={() => give(g)}
+              >
+                {groups === 2
+                  ? g === 0
+                    ? "给左边玩具 1 枚"
+                    : "给右边玩具 1 枚"
+                  : "给第" + (g + 1) + "只玩具 1 枚"}
+              </button>
+            ))}
             <button
               className="quiet"
-              disabled={paused || p.solved}
+              disabled={p.paused || p.solved}
               onClick={() => {
-                setCoins(Array(12).fill(null));
-                setSelected(null);
+                p.setCoins(Array(total).fill(null));
+                p.setSelected(null);
               }}
             >
               重新分配
             </button>
           </div>
           <p aria-live="polite">
-            左边 {count(0)} 枚 · 右边 {count(1)} 枚 · 还剩{" "}
-            {displayCoins.filter((v) => v === null).length} 枚
+            {groups === 2
+              ? "左边 " + numbers[0] + " 枚 · 右边 " + numbers[1] + " 枚"
+              : numbers
+                  .map((n, i) => "第" + (i + 1) + "只 " + n + " 枚")
+                  .join(" · ")}{" "}
+            · 还剩 {display.filter((v) => v === null).length} 枚
           </p>
           {(p.solved || demo) && (
-            <p className="earned-equation">12 ÷ 2 ＝ 6 元</p>
+            <p className="earned-equation">
+              {total} ÷ {groups} ＝ {each} 元
+            </p>
           )}
         </div>
       )}
     </div>
   );
 }
-const dotPosition = (i: number, total: number, x = 30, y = 60) => ({
-  x: x + (i % Math.min(total, 9)) * 27,
-  y: y + Math.floor(i / Math.min(total, 9)) * 30,
+const dotPosition = (i: number, _total: number, x = 190, y = 65) => ({
+  x: x + (i % 10) * 26,
+  y: y + Math.floor(i / 10) * 24,
 });
 function Shapes(p: SceneProps) {
   const a = p.animation;
+  const model = p.model.shapes;
+  const star = model.starValue,
+    tri = model.triangleValue;
   const triangle = p.observing ? a.frame >= 3 : p.question.id === "triangle";
-  const count = triangle ? 16 : 18,
-    groups = triangle ? 4 : 3,
+  const count = triangle ? model.triangles * tri : model.stars * star,
+    groups = triangle ? model.triangles : model.stars,
     each = count / groups;
   const distributing = p.observing
     ? triangle
@@ -363,7 +404,14 @@ function Shapes(p: SceneProps) {
       {!p.transfer && (
         <p className="scene-math-readout">
           {calculation
-            ? "☆＝6，△＝4 · " + (product ? "6组，每组4个" : "把6个和4个合起来")
+            ? "☆＝" +
+              star +
+              "，△＝" +
+              tri +
+              " · " +
+              (product
+                ? star + "组，每组" + tri + "个"
+                : "把" + star + "个和" + tri + "个合起来")
             : count +
               " 点能量 → " +
               groups +
@@ -373,8 +421,10 @@ function Shapes(p: SceneProps) {
       )}
       {p.transfer ? (
         <div className="transfer-sketch">
-          <div className="symbol-line">○ ＋ ○ ＝ 14</div>
-          <div className="symbol-line">□ ＋ □ ＋ □ ＝ 12</div>
+          <div className="symbol-line">○ ＋ ○ ＝ {model.stars * star}</div>
+          <div className="symbol-line">
+            □ ＋ □ ＋ □ ＝ {model.triangles * tri}
+          </div>
           <p>先找出图形的秘密，再看清 ＋ 或 ×。</p>
         </div>
       ) : (
@@ -382,7 +432,9 @@ function Shapes(p: SceneProps) {
           viewBox="0 0 640 360"
           className="math-svg"
           aria-label={
-            calculation ? "星星6，三角形4，探索加法和乘法" : "能量点平均分配"
+            calculation
+              ? "星星" + star + "，三角形" + tri + "，探索加法和乘法"
+              : "能量点平均分配"
           }
         >
           {!calculation ? (
@@ -425,7 +477,7 @@ function Shapes(p: SceneProps) {
                 </g>
               ))}
               {range(count).map((i) => {
-                const start = dotPosition(i, count, 199, 72);
+                const start = dotPosition(i, count, 190, 65);
                 const g = i % groups,
                   j = Math.floor(i / groups);
                 return (
@@ -453,7 +505,7 @@ function Shapes(p: SceneProps) {
                 textAnchor="middle"
                 className="equation symbol-arrival"
               >
-                ☆ ＝ 6
+                ☆ ＝ {star}
               </text>
               <text
                 x="430"
@@ -461,37 +513,45 @@ function Shapes(p: SceneProps) {
                 textAnchor="middle"
                 className="equation symbol-arrival triangle-arrival"
               >
-                △ ＝ 4
+                △ ＝ {tri}
               </text>
               <text x="320" y="93" textAnchor="middle" className="equation">
-                6 {product ? "×" : "＋"} 4 ＝{" "}
-                {showResult ? (product ? "24" : "10") : "？"}
+                {star} {product ? "×" : "＋"} {tri} ＝{" "}
+                {showResult ? (product ? star * tri : star + tri) : "？"}
               </text>
               {product
-                ? range(24).map((i) => (
+                ? range(star * tri).map((i) => (
                     <g
                       key={i}
                       className="multiplication-group"
-                      style={{ animationDelay: Math.floor(i / 4) * 0.3 + "s" }}
+                      style={{
+                        animationDelay: Math.floor(i / tri) * 0.3 + "s",
+                      }}
                     >
                       <circle
-                        cx={210 + (i % 4) * 58}
-                        cy={132 + Math.floor(i / 4) * 36}
+                        cx={180 + ((i % tri) * 400) / Math.max(1, tri - 1)}
+                        cy={
+                          132 +
+                          (Math.floor(i / tri) * 210) / Math.max(1, star - 1)
+                        }
                         r="11"
                         fill="#9b83d5"
                       />
-                      {i % 4 === 0 && (
+                      {i % tri === 0 && (
                         <text
-                          x="160"
-                          y={138 + Math.floor(i / 4) * 36}
+                          x="100"
+                          y={
+                            138 +
+                            (Math.floor(i / tri) * 210) / Math.max(1, star - 1)
+                          }
                           fontSize="14"
                         >
-                          第{Math.floor(i / 4) + 1}组
+                          第{Math.floor(i / tri) + 1}组
                         </text>
                       )}
                     </g>
                   ))
-                : range(10).map((i) => (
+                : range(star + tri).map((i) => (
                     <g
                       key={i}
                       className="energy-dot"
@@ -500,22 +560,30 @@ function Shapes(p: SceneProps) {
                           p.merge || p.hint >= 2
                             ? "translate(0px, 0px)"
                             : "translate(" +
-                              (i < 6 ? -35 : 35) +
+                              (i < star ? -35 : 35) +
                               "px, " +
-                              (i < 6 ? -10 : 40) +
+                              (i < star ? -10 : 40) +
                               "px)",
                       }}
                     >
                       <circle
-                        cx={98 + i * 49}
-                        cy="217"
+                        cx={
+                          70 +
+                          ((i % 10) * 500) /
+                            Math.max(1, Math.min(10, star + tri) - 1)
+                        }
+                        cy={180 + Math.floor(i / 10) * 80}
                         r="17"
-                        fill={i < 6 ? "#b38ade" : "#53aa98"}
+                        fill={i < star ? "#b38ade" : "#53aa98"}
                       />
                       {(p.merge || p.hint >= 2) && (
                         <text
-                          x={98 + i * 49}
-                          y="261"
+                          x={
+                            70 +
+                            ((i % 10) * 500) /
+                              Math.max(1, Math.min(10, star + tri) - 1)
+                          }
+                          y={219 + Math.floor(i / 10) * 80}
                           textAnchor="middle"
                           fontSize="18"
                           className="count-in"
@@ -538,8 +606,8 @@ function Shapes(p: SceneProps) {
       <p className="scene-caption">
         {calculation
           ? product
-            ? "乘法：6组，每组4个。"
-            : "加法：把6个和4个合起来。"
+            ? "乘法：" + star + "组，每组" + tri + "个。"
+            : "加法：把" + star + "个和" + tri + "个合起来。"
           : "让能量点公平地住进每个格子。"}
       </p>
     </div>
@@ -573,6 +641,8 @@ function Dragonfly() {
 }
 function Detective(p: SceneProps) {
   const mode = p.question.interaction || "animals";
+  const animals = makeAnimals(p.model.detective),
+    patterns = makePatterns(p.model.detective.patternCount);
   const isPattern = p.transfer;
   const groupNames =
     mode === "habitat"
@@ -622,7 +692,9 @@ function Detective(p: SceneProps) {
         <span className="scene-label">
           {isPattern ? "图案工作室" : "动物朋友聚会"}
         </span>
-        <span className="pill">{isPattern ? "12 个图案" : "20 位朋友"}</span>
+        <span className="pill">
+          {isPattern ? patterns.length + " 个图案" : animals.length + " 位朋友"}
+        </span>
       </div>
       <p className="scene-caption">
         先点一个{isPattern ? "图案" : "动物"}，再点分类框。也可以拖动。
@@ -630,7 +702,23 @@ function Detective(p: SceneProps) {
           ? "已选：" + selectedLabel
           : "点已分类的朋友可以重新放置。"}
       </p>
-      <div className="classification-field" aria-label="可操作的分类场景">
+      <div
+        className="classification-field"
+        aria-label="可操作的分类场景"
+        style={{
+          height: Math.max(
+            500,
+            Math.ceil(objects.length / 5) * 70 + 100,
+            Math.max(
+              ...counts.map((n) =>
+                Math.ceil(n / (groupNames.length === 2 ? 3 : 2)),
+              ),
+            ) *
+              75 +
+              150,
+          ),
+        }}
+      >
         <div className="source-label">
           还没分类：{objects.length - assigned}
         </div>
@@ -675,8 +763,11 @@ function Detective(p: SceneProps) {
             : 10 + (i % 5) * 20;
           const top = inGroup
             ? 64 +
-              Math.floor(ordered / columns) * (groupNames.length === 2 ? 7 : 9)
-            : 12 + Math.floor(i / 5) * 10;
+              (Math.floor(ordered / columns) * 30) /
+                Math.max(1, Math.ceil(Math.max(...counts) / columns) - 1)
+            : 12 +
+              (Math.floor(i / 5) * 28) /
+                Math.max(1, Math.ceil(objects.length / 5) - 1);
           return (
             <button
               key={o.id}
@@ -747,10 +838,13 @@ function Detective(p: SceneProps) {
       {p.solved && (
         <p className="earned-equation">
           {mode === "habitat"
-            ? "14＋6＝20，分类标准变了，总数不变！"
+            ? counts.join("＋") +
+              "＝" +
+              objects.length +
+              "，分类标准变了，总数不变！"
             : isPattern
-              ? "两种分类，总数都是12。"
-              : "8＋6＋6＝20，没有遗漏！"}
+              ? "两种分类，总数都是" + objects.length + "。"
+              : counts.join("＋") + "＝" + objects.length + "，没有遗漏！"}
         </p>
       )}
       <button
@@ -808,7 +902,7 @@ function Person({
   );
 }
 function Square(p: SceneProps) {
-  const side = p.transfer ? 3 : 5,
+  const side = p.model.square.rank * 2 - 1,
     center = Math.floor(side / 2),
     a = p.animation;
   const rank = center + 1;
@@ -816,18 +910,20 @@ function Square(p: SceneProps) {
     ? a.frame
     : p.guiding
       ? p.question.id === "side" || p.transfer
-        ? a.frame + 5
-        : a.frame + 17
+        ? a.frame + side
+        : a.frame + side + 4 * rank
       : -1;
   const direction =
-    frame >= 5 && frame < 5 + 4 * rank ? Math.floor((frame - 5) / rank) : -1;
-  const counted = direction >= 0 ? ((frame - 5) % rank) + 1 : 0;
-  const rowStart = 5 + 4 * rank;
+    frame >= side && frame < side + 4 * rank
+      ? Math.floor((frame - side) / rank)
+      : -1;
+  const counted = direction >= 0 ? ((frame - side) % rank) + 1 : 0;
+  const rowStart = side + 4 * rank;
   const rowHighlight =
     frame >= rowStart && frame < rowStart + side ? frame - rowStart : -1;
   const point = (r: number, c: number) => ({
-    x: 320 + (c - center) * (p.transfer ? 85 : 70),
-    y: 76 + r * (p.transfer ? 90 : 62),
+    x: 320 + (c - center) * Math.min(85, 420 / Math.max(1, side - 1)),
+    y: side === 1 ? 190 : 65 + r * Math.min(70, 250 / Math.max(1, side - 1)),
   });
   const path =
     direction === 0
@@ -881,10 +977,13 @@ function Square(p: SceneProps) {
           const r = Math.floor(i / side),
             c = i % side,
             t = point(r, c);
-          const visible = !p.observing || a.frame >= 5 || r <= a.frame;
+          const visible = !p.observing || a.frame >= side || r <= a.frame;
           const enter =
             p.observing && a.frame === r
-              ? Math.max(0, Math.min(1, a.progress * 2 - c * 0.18))
+              ? Math.max(
+                  0,
+                  Math.min(1, a.progress * (1 + (side - 1) * 0.14) - c * 0.14),
+                )
               : 1;
           const mark =
             direction >= 0
@@ -947,7 +1046,7 @@ function Square(p: SceneProps) {
       {(p.solved || p.hint >= 2) && (
         <p className="earned-equation">
           {p.question.id === "side"
-            ? "2 ＋ 1 ＋ 2 ＝ 5"
+            ? rank - 1 + " ＋ 1 ＋ " + (rank - 1) + " ＝ " + side
             : side + " × " + side + " ＝ " + side * side + " 人"}
         </p>
       )}
@@ -968,7 +1067,9 @@ export default function Scenes(props: SceneProps) {
       ref={ref}
       className={props.paused ? "scene-wrapper paused" : "scene-wrapper"}
     >
-      {props.level === "shop" ? (
+      {props.level === "queue" ? (
+        <QueueScene {...props} />
+      ) : props.level === "shop" ? (
         <Shop {...props} />
       ) : props.level === "shapes" ? (
         <Shapes {...props} />
