@@ -184,3 +184,19 @@ describe("independent source-answer checks", () => {
     expect(answers(8, 25)).toEqual(["5", "15", "5", "10"]);
   });
 });
+
+describe("explanation mathematics", () => {
+  it("does not use zero as a placeholder answer in conceptual explanations", () => {
+    const span = catalog.find((d) => d.book === 1 && d.n === 3)!,
+      equation = catalog.find((d) => d.book === 7 && d.n === 23)!;
+    expect(build(span, defaults(span)).tasks.map((t) => t.answer)).toEqual([
+      "每一拃长度不同",
+    ]);
+    const l = build(equation, defaults(equation));
+    if (l.scene.type !== "workbook") throw Error();
+    const p = l.scene.panels[0];
+    if (p.kind !== "cards") throw Error();
+    expect(p.result).toBe(12);
+    expect(p.operation).toBe("12÷4＋9＝3×6－6");
+  });
+});
