@@ -398,3 +398,29 @@ test("连续三道开放表达可稳定提交", async ({ page }) => {
     "TRANSFER",
   );
 });
+
+test("中文输入法确认候选字时不提前交卷", async ({ page }) => {
+  await open(page, 1, 24);
+  await observe(page);
+  const field = page.getByRole("textbox");
+  await field.fill("开");
+  await field.dispatchEvent("keydown", {
+    key: "Enter",
+    code: "Enter",
+    isComposing: true,
+    keyCode: 229,
+  });
+  expect(await rows(page)).toHaveLength(0);
+  await expect(page.locator(".session")).toHaveAttribute(
+    "data-stage",
+    "QUESTION",
+  );
+  await field.dispatchEvent("keydown", {
+    key: "Enter",
+    code: "Enter",
+    isComposing: false,
+    keyCode: 13,
+  });
+  await expect(page.locator(".success")).toBeVisible();
+  expect((await rows(page))[0].firstAnswer).toBe("开");
+});

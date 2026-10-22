@@ -61,6 +61,8 @@ Windows不能原生运行Playwright的WebKit项目时，可运行`npm run test:e
 - `/codex-ext/math-adventure/`：完整数学项目。
 - `/codex-ext/chinese-adventure/`：语文项目。
 
+CI使用与锁定依赖匹配的Playwright v1.64.1-noble官方预装镜像，按SHA256固定。升级`@playwright/test`时同时更新镜像版本和摘要，保留全部浏览器测试。
+
 两个项目均使用Vite相对base，构建产物独立，支持GitHub Pages子路径。旧数学根级资源也保留在发布包中；共同首页替代网站根入口。仓库原始根目录测试页`index.html`没有覆盖。
 
 Pages Source保持GitHub Actions，保留变量`MATH_ADVENTURE_PAGES_ENABLED=true`即可，普通更新不必重新设置。发布分支仍为`codex/math-adventure-v1`；功能分支用于开发，不合并main。工作流先检查数学，再检查语文，成功后组装共同首页并一次性发布。仓库公开时通常可免费使用Pages，具体额度/收费以GitHub当前套餐为准。本项目没有支付功能。

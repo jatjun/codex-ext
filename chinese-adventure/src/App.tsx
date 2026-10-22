@@ -860,7 +860,12 @@ function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
                       value={typeof answer === "string" ? answer : ""}
                       onChange={(e) => setAnswer(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") submit();
+                        if (
+                          e.key === "Enter" &&
+                          !e.nativeEvent.isComposing &&
+                          e.nativeEvent.keyCode !== 229
+                        )
+                          submit();
                       }}
                       placeholder="想好后写在这里"
                     />
