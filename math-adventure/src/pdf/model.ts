@@ -1,3 +1,4 @@
+import type { WorkbookScene } from "../workbooks/types";
 import type { ExtensionScene } from "../notebooks/types";
 /** Hand-checked against all twelve rendered PDF pages. No source PDF or personal data shipped. */
 export type Shape =
@@ -25,6 +26,7 @@ export type Item = {
   kind?: string;
 };
 export type Scene =
+  | WorkbookScene
   | ExtensionScene
   | { type: "pieces"; pieces: Piece[]; title: string; original: boolean }
   | {
@@ -874,7 +876,8 @@ export function checkTask(
   );
 }
 export function observation(scene: Scene) {
-  if (scene.type === "extension") return scene.frames;
+  if (scene.type === "extension" || scene.type === "workbook")
+    return scene.frames;
   return [
     {
       text:

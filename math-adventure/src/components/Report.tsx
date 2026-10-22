@@ -1,3 +1,4 @@
+import { catalog as morningCatalog } from "../workbooks/model";
 import { allAddresses } from "../notebooks/model";
 import { catalog } from "../pdf/model";
 import { levels } from "../questions/data";
@@ -65,6 +66,15 @@ export function Report({ onBack }: { onBack: () => void }) {
             <tbody>
               {[
                 ...levels,
+                ...morningCatalog
+                  .filter((d) => !d.pending)
+                  .map((d) => ({
+                    id: d.id,
+                    title: `新${d.book}册${d.n} · ${d.title}`,
+                    icon: "✦",
+                    questions: [],
+                    transfer: [],
+                  })),
                 ...allAddresses.map((a) => ({
                   id: a.id,
                   title:

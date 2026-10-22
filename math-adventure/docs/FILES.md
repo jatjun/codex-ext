@@ -79,3 +79,30 @@
 - `math-adventure/tests/notebooks.test.ts`
 
 新增模块见 TWO_NOTEBOOKS.md；已有教学会话通过可选参数扩展，旧题接口保持兼容。依赖清单仅更新版本号，没有安装新运行依赖。
+
+
+## V1.4 八份错题本修改清单
+
+仅修改math-adventure目录；原入口、记录、根目录网页和工作流保留。原PDF、截图、缓存、构建产物不提交。
+
+- `math-adventure/README.md`
+- `math-adventure/docs/EIGHT_NOTEBOOKS.md`
+- `math-adventure/docs/FILES.md`
+- `math-adventure/docs/TEACHING_DESIGN.md`
+- `math-adventure/docs/VALIDATION.md`
+- `math-adventure/package-lock.json`
+- `math-adventure/package.json`
+- `math-adventure/src/App.tsx`
+- `math-adventure/src/components/Report.tsx`
+- `math-adventure/src/notebooks/Lab.tsx`
+- `math-adventure/src/pdf/Lab.tsx`
+- `math-adventure/src/pdf/Scene.tsx`
+- `math-adventure/src/pdf/model.ts`
+- `math-adventure/src/styles/main.css`
+- `math-adventure/src/workbooks/Lab.tsx`
+- `math-adventure/src/workbooks/Scene.tsx`
+- `math-adventure/src/workbooks/model.ts`
+- `math-adventure/src/workbooks/types.ts`
+- `math-adventure/tests/e2e/workbooks.spec.ts`
+- `math-adventure/tests/workbooks.test.ts`
+- `math-adventure/vite.config.ts`

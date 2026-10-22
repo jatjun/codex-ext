@@ -1,3 +1,5 @@
+import { WorkbooksMap, WorkbookLesson } from "./workbooks/Lab";
+import type { Definition } from "./workbooks/types";
 import { NotebookMap, NotebookLesson } from "./notebooks/Lab";
 import type { Address } from "./notebooks/types";
 import { useState } from "react";
@@ -18,11 +20,12 @@ function Brand() {
   );
 }
 export default function App() {
+  const [workbook, setWorkbook] = useState<Definition | null>(null);
   const [notebook, setNotebook] = useState<Address | null>(null);
   const [pdfId, setPdfId] = useState<number | null>(null);
   const [queueKind, setQueueKind] = useState<QueueKind | null>(null);
   const [page, setPage] = useState<
-      LevelId | "home" | "report" | "pdf" | "notebooks"
+      LevelId | "home" | "report" | "pdf" | "notebooks" | "workbooks"
     >("home"),
     [visit, setVisit] = useState(0);
   const completed = (id: LevelId) => {
@@ -41,6 +44,7 @@ export default function App() {
     setQueueKind(null);
     setPdfId(null);
     setNotebook(null);
+    setWorkbook(null);
     setVisit((v) => v + 1);
     window.scrollTo({ top: 0 });
   };
@@ -146,6 +150,18 @@ export default function App() {
           </section>
           <section className="queue-feature">
             <div>
+              <span className="eyebrow">NEW / 八份错题本</span>
+              <h2>把条件换一换，让关系看得见。</h2>
+              <p>
+                钟表、余数、方向、分类、线段与倍数。按上传顺序和原题号选择。
+              </p>
+            </div>
+            <button className="primary" onClick={() => navigate("workbooks")}>
+              进入八份错题本动画 →
+            </button>
+          </section>
+          <section className="queue-feature">
+            <div>
               <span className="eyebrow">NEW / 排队动画专题</span>
               <h2>从一条队伍，探索八种关系。</h2>
               <p>名次、间隔、实心队列、加入离开、交换位置。数字都能改。</p>
@@ -242,6 +258,22 @@ export default function App() {
             </span>
           </section>
         </main>
+      ) : page === "workbooks" ? (
+        workbook ? (
+          <WorkbookLesson
+            key={workbook.id}
+            definition={workbook}
+            onExit={() => setWorkbook(null)}
+          />
+        ) : (
+          <WorkbooksMap
+            onChoose={(d) => {
+              setWorkbook(d);
+              window.scrollTo({ top: 0 });
+            }}
+            onBack={() => navigate("home")}
+          />
+        )
       ) : page === "notebooks" ? (
         notebook ? (
           <NotebookLesson
@@ -249,6 +281,7 @@ export default function App() {
             address={notebook}
             onExit={() => {
               setNotebook(null);
+              setWorkbook(null);
               window.scrollTo({ top: 0 });
             }}
           />
@@ -299,7 +332,7 @@ export default function App() {
         <p>
           为好奇心留一点空间。<span>学习记录仅保存在你的浏览器中。</span>
         </p>
-        <span className="version">探索版 V1.3 · 适合 8–10 岁</span>
+        <span className="version">探索版 V1.4 · 适合 8–10 岁</span>
       </footer>
     </>
   );

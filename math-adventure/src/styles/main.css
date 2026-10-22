@@ -2990,3 +2990,123 @@ table td {
 .pdf-map section[id] {
   scroll-margin-top: 20px;
 }
+/* 八份错题本：场景内平移，手机页面不横向溢出 */
+.wb-scene {
+  min-width: 0;
+  overflow: hidden;
+}
+.wb-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.wb-svg {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  height: auto;
+  font-family: inherit;
+}
+.wb-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+.wb-controls button,
+.wb-controls select,
+.wb-card-buttons button {
+  min-height: 46px;
+  min-width: 46px;
+}
+.wb-controls label {
+  display: grid;
+  gap: 8px;
+}
+.wb-controls input[type="range"],
+.wb-scrub input {
+  min-height: 44px;
+  min-width: 160px;
+  accent-color: #407e76;
+}
+.wb-scrub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+.wb-card-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.wb-card-buttons button[aria-pressed="true"] {
+  background: #efd580;
+}
+.wb-source-note {
+  padding: 12px 16px;
+  border-left: 4px solid #c9a94e;
+  background: #fff7dd;
+  line-height: 1.7;
+}
+.pdf-config select {
+  max-width: 100%;
+  min-height: 46px;
+  border: 1px solid #a4bcae;
+  background: white;
+  border-radius: 8px;
+  padding: 9px;
+  font: inherit;
+}
+.wb-scene button {
+  white-space: normal;
+}
+.wb-scene .footnote {
+  line-height: 1.65;
+}
+@media (max-width: 600px) {
+  .wb-svg {
+    min-width: 620px;
+  }
+  .wb-controls {
+    gap: 10px;
+  }
+  .wb-controls button {
+    flex: 1 1 130px;
+  }
+  .pdf-map h2 small {
+    display: block;
+    font-size: 16px;
+  }
+}
+.wb-clock-aside {
+  display: none;
+}
+.wb-scene[data-workbook-kind="clock"] .wb-svg {
+  min-width: 0;
+  width: 100%;
+  max-width: 360px;
+  margin: auto;
+}
+.wb-clock-facts,
+.wb-scale-readings {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #365f51;
+  background: #edf3e8;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.wb-scroll-note {
+  font-size: 14px;
+  color: #647c68;
+  line-height: 1.6;
+}
+@media (min-width: 800px) {
+  .wb-scroll-note {
+    display: none;
+  }
+}

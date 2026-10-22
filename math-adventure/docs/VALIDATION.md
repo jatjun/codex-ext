@@ -95,3 +95,14 @@ PLAYWRIGHT_BROWSERS_PATH=/workspace/codex-ext/math-adventure/.browser-cache \
 目标确认是私有 `jatjun/codex-ext`。初始本地挂载没有可用Git元数据；通过GitHub连接读取远程 `codex/cloud-test-page` 的快照，在 `/workspace/codex-ext` 独立工作目录验证。远程开发基线为 `ef3fd5a91ad277d857df30ea2f1c32b669a60b14`；不将本地验证快照提交冒充远程提交。
 
 根目录原README和测试HTML保持内容不变。新增代码仅在 `math-adventure/`，另增专用 `.github/workflows/math-adventure.yml`。不读取密钥文件，不提交凭据、学习记录、node_modules、缓存、构建包或浏览器测试临时产物。不启用其他Agent/Worker，不合并main。
+
+
+## V1.4 八份错题本（2026-10-22）
+
+- 源资料：8份、177个原题地址；176个练习可构建，7册14题要求缺失明确待核对。原PDF仅本地查看，不提交。
+- 数学/参数单元：覆盖176个默认模型、迁移与重试、关联字段变化、50个旧题的每个参数、独立数学答案、余数边界、时钟读数、分类总数、有效范围；实际执行结果以本次终端和Actions为准。
+- 已执行新专题首轮桌面与手机触控：42项通过，涵盖16类场景、改数、首次错误保留、画针修改、暂停、重播、旧花束联动示例和待核对入口。随后增加运算符触控键盘、完整迁移、二层分类树测试，最终数量见本次Actions。
+- 真正的iPhone和Windows设备、系统中文语音未实测；本地WebKit缺少系统库，不能声称本地WebKit通过。GitHub Actions安装浏览器系统库后执行三个项目；只有成功的该次结果才作最终验证。
+- Pages使用既有工作流。V1.4是否成功发布需检查最终check/deploy和实际访问结果，不由代码或构建成功推定。
+
+- 最终本地数学与参数单元测试：306项通过；类型检查及生产构建通过。新专题24项浏览器用例在桌面与手机触控两个项目执行，48项通过（含独立迁移与分类树）。完整旧功能回归及GitHub WebKit结果以本次Actions为准。

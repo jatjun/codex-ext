@@ -574,7 +574,21 @@ export function PdfSession({
               onSelect={(id) => {
                 if (!canAnswer) return;
                 setSelected((s) =>
-                  s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
+                  id.startsWith("wb-single:")
+                    ? [id]
+                    : id.startsWith("wb-sort:")
+                      ? [
+                          ...s.filter(
+                            (x) =>
+                              !x.startsWith(
+                                id.split(":").slice(0, 2).join(":") + ":",
+                              ),
+                          ),
+                          id,
+                        ]
+                      : s.includes(id)
+                        ? s.filter((x) => x !== id)
+                        : [...s, id],
                 );
               }}
               grouped={grouped || teaching.state === "HINT_2"}
@@ -649,14 +663,45 @@ export function PdfSession({
                       ))}
                     </select>
                   ) : (
-                    <input
-                      aria-label="我的答案"
-                      inputMode="numeric"
-                      disabled={!canAnswer}
-                      value={answer}
-                      onChange={(e) => setAnswer(e.target.value)}
-                      autoComplete="off"
-                    />
+                    <>
+                      <input
+                        aria-label="我的答案"
+                        inputMode={
+                          Number.isFinite(Number(currentTask.answer))
+                            ? "numeric"
+                            : "text"
+                        }
+                        disabled={!canAnswer}
+                        value={answer}
+                        onChange={(e) => setAnswer(e.target.value)}
+                        autoComplete="off"
+                      />
+                      {activeLesson.scene.type === "workbook" &&
+                        /^[+×÷-]{4}$/.test(currentTask.answer) && (
+                          <span
+                            className="wb-controls"
+                            aria-label="运算符输入按钮"
+                          >
+                            {["+", "-", "×", "÷"].map((symbol) => (
+                              <button
+                                key={symbol}
+                                type="button"
+                                disabled={!canAnswer || answer.length >= 4}
+                                onClick={() => setAnswer((a) => a + symbol)}
+                              >
+                                输入 {symbol}
+                              </button>
+                            ))}
+                            <button
+                              type="button"
+                              disabled={!canAnswer}
+                              onClick={() => setAnswer((a) => a.slice(0, -1))}
+                            >
+                              删除最后一个符号
+                            </button>
+                          </span>
+                        )}
+                    </>
                   ))}
               </label>
               <div className="button-row">

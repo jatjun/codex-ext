@@ -1,3 +1,4 @@
+import { WorkbookCanvas } from "../workbooks/Scene";
 import { AdvancedScene } from "../notebooks/Scene";
 import type { CSSProperties } from "react";
 import {
@@ -108,6 +109,23 @@ export function PdfScene({
   counting: boolean;
   demonstrating: boolean;
 }) {
+  if (scene.type === "workbook")
+    return (
+      <WorkbookCanvas
+        {...{
+          scene,
+          task,
+          frame,
+          progress,
+          running,
+          paused,
+          selected,
+          onSelect,
+          grouped,
+          demonstrating,
+        }}
+      />
+    );
   if (scene.type === "extension")
     return (
       <AdvancedScene

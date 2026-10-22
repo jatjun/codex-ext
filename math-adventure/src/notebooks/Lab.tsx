@@ -143,6 +143,22 @@ export function NotebookLesson({
           <p>
             点击应用后，题目、物体数量、提示、标准答案与迁移练习同步更新。无法平均分、人数不合理或相遇后继续跑等设置会被拦截。历史作答保留，刷新恢复原题。
           </p>
+          {book === "b" && number === 6 && (
+            <>
+              <p>
+                花束数与两类花的枝数相互约束：例如改成6束时，可以同时把两类花改成30枝和18枝。只改束数可能无法平均分。
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setDraft({ ...draft, a: 30, b: 18, n: 6 });
+                  setErrors([]);
+                }}
+              >
+                填入示例：30枝、18枝、6束
+              </button>
+            </>
+          )}
           <button className="primary">应用设置，重新开始</button>
         </form>
       </details>

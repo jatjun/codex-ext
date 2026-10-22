@@ -1,6 +1,12 @@
-# Math Adventure｜数学错题动画实验室 V1.3
+# Math Adventure｜数学错题动画实验室 V1.4
 
 面向8～10岁孩子的中文数学动画原型：**看得见 → 动手操作 → 说出道理 → 独立再做**。本项目独立保存在 `math-adventure/`，不调用 KidsLearningHub、KidsSharedCore、AgentOrchestrator、其他 Worker 或任何大模型 API。
+
+## 八份错题本（V1.4新增）
+
+首页点击**进入八份错题本动画**，按上传顺序1～8册和原题号选择。共177个地址，176个可运行练习，1个明确待核对（第7册14题仅有算式、缺少任务要求，不猜答案）。钟表、分组余数、倍数、方向、分类树、线段、种树间隔、彩带、刻度测量、棋子边框、座位、积木高度与转移关系使用可操作SVG动画。展开**调整条件和数字**后应用；依题型修改数量、单价、人数、时间、方向、端点方案或分类排列。数学常数不改，概念题切换情境。
+
+详细逐题参数、默认核对、原图矛盾修正、明确的改编说明与新增方法见 [EIGHT_NOTEBOOKS.md](docs/EIGHT_NOTEBOOKS.md)。上一批50题已增加逐项参数审计；花束题新增“30枝、18枝、6束”联动示例。修改前版本已保留远程分支 `backup/math-adventure-before-eight-books-2026-10-22`（`fbd5540`）。所有原有入口和记录保留，不上传PDF原图、手写内容或学习数据。
 
 ## 两份新错题本（V1.3新增）
 
@@ -48,7 +54,8 @@ math-adventure/
     animation/              # 时钟、观察脚本、语音完成屏障
     audio/                  # 原生中文语音封装
     components/             # 数字配置、共用教学会话、家长报告
-    notebooks/              # 新50题模型、几何算法与动画
+    workbooks/              # 八份错题本177地址、条件工厂与动画
+    notebooks/              # 前批50题模型、几何算法与动画
     pdf/                    # 21题错题本模型、动画与教学会话
     questions/              # 默认题目、参数、生成器、排队数学与校验
     records/store.ts        # 首次答案保留、本地存储与统计
@@ -112,21 +119,18 @@ Linux机器可能还需要管理员安装浏览器系统库：`npx playwright in
 
 ## GitHub Pages
 
-现有仓库是私有仓库。私有仓库的Pages通常需要GitHub Pro、Team或Enterprise等支持的套餐；具体可用性以该仓库的 **Settings → Pages** 为准。普通Pages站点可能公开可访问：不要把孩子资料写入代码或部署包。仓库可见性不会被本项目改变。
+仓库 `jatjun/codex-ext` 当前为**公开仓库**，已有GitHub Pages。站点地址为 https://jatjun.github.io/codex-ext/ 。V1.3已在此前成功发布；每次新提交的实际结果，以该次Actions中check和deploy完成状态及线上复核为准，不把“推送成功”当成“发布成功”。
 
-当前连接无法读取Pages管理端点，开发时**未能确认当前Pages配置、套餐资格或成功发布**。保留根目录现有文件，仅新增独立工作流，发布开关默认关闭：
+当前发布分支是 `codex/math-adventure-v1`。已有 `.github/workflows/math-adventure.yml` 从 `math-adventure/` 安装、单元测试、类型检查、构建并运行Chromium/手机触控/WebKit端到端测试，再上传 `math-adventure/dist`。仅在全部检查成功且仓库变量 `MATH_ADVENTURE_PAGES_ENABLED=true` 时部署。Vite的 `base: './'` 支持 `/codex-ext/` 子路径；URL不需要追加源码目录名。运行时代码无CDN、远程图片或外部API。
 
-1. 打开 `https://github.com/jatjun/codex-ext/settings/pages`。如果已有站点，先确认可以用本项目替换该站点；一个仓库的项目Pages只有一个站点位置。
-2. 若页面提示套餐限制，先由仓库所有者处理套餐；不必把私有仓库改成公开。
-3. 在 **Build and deployment → Source** 选择 **GitHub Actions**。
-4. 在 **Settings → Secrets and variables → Actions → Variables → New repository variable** 添加 `MATH_ADVENTURE_PAGES_ENABLED`，值为 `true`。这是普通发布开关，不是密码。
-5. 在 **Settings → Environments → github-pages → Deployment branches and tags** 确认允许 `codex/math-adventure-v1`；如果未来经你确认合并到main，也允许main。不要为部署擅自合并。
-6. 打开 **Actions → Math Adventure · checks and Pages**，选择本功能分支的push运行并重新运行全部jobs。若工作流已经存在于默认分支，也可使用 **Run workflow** 并选择功能分支。工作流仅在全部检查通过且发布开关开启时部署。
-7. 查看 `deploy` job和 `github-pages` environment给出的真实URL；打开页面并走一遍教学流程后，才确认发布成功。
+日常更新不需要重新设置Pages，也不需要合并main。若将来重建仓库或发布设置丢失：
 
-工作流从 `math-adventure/` 安装、测试和构建，只上传 `math-adventure/dist`，发布到Pages站点根目录。Vite的 `base: './'` 使用相对资源路径，支持 `/codex-ext/` 子路径与本地预览；不需要手工把源码目录追加到Pages URL。
+1. Settings → Pages → Source选 **GitHub Actions**。
+2. Settings → Secrets and variables → Actions → Variables，设置 `MATH_ADVENTURE_PAGES_ENABLED` 为 `true`。
+3. Settings → Environments → github-pages，允许发布分支 `codex/math-adventure-v1`。
+4. 检查Actions的check与deploy均成功，并实际打开网站。没有验证前不声称发布成功。
 
-通常候选地址是 `https://jatjun.github.io/codex-ext/`，但这只是候选地址，**不是已验证的访问地址**。实际以部署输出为准。发布开关关闭时仍运行检查并上传构建artifact。
+仓库公开不等于适合上传个人资料；原PDF和孩子数据均不提交。若日后改为私有，是否支持Pages需按账户套餐另行检查。
 
 ## 学习记录与隐私
 
@@ -155,5 +159,5 @@ Linux机器可能还需要管理员安装浏览器系统库：`npx playwright in
 - 本地仅验证Chromium；WebKit在本环境缺少系统库。Windows Chrome/Edge与iPhone Safari真机验收尚待完成。
 - 这是固定数学题型内可调整数字的教学原型；不自动识别上传错题，也不建立跨设备账号。超出范围或不成立的条件会明确拒绝，不会猜测答案。
 - “上一步”用于回看该关观察，不回滚历史作答；“重播”重置当前演示，不重复创建物体。“重新尝试”清空当前操作，但保留首次记录。
-- 完整讲解后必须做相似练习，再重新完成原题；相似练习目前提供文字题干，不另建专属动画。
+- 完整讲解后必须做相似练习，再重新完成原题；原四关的相似练习使用文字题干；PDF和新错题册提供不同条件的同类动画模型。
 - 未来可增加本地学习档案导入、更多错题模型、离线缓存、自定义分步录音、家长可控的AI辅导。任何云端功能都需单独设计明确的数据与权限边界。
