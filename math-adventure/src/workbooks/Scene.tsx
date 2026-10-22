@@ -379,12 +379,23 @@ function PanelCanvas({
         data-stack-piece={id}
         transform={`translate(${x} ${bottom - h * scale})`}
       >
-        <rect width={w} height={h * scale} fill={fill} stroke="#47695a" />
-        <path
-          d={`M0 0L12-10H${w + 12}V${h * scale - 10}L${w} ${h * scale}M${w} 0L${w + 12}-10`}
-          fill="none"
-          stroke="#47695a"
-        />
+        {id.includes("cylinder") ? (
+          <g fill={fill} stroke="#47695a">
+            <path
+              d={`M0 5V${h * scale - 5}A${w / 2} 5 0 0 0 ${w} ${h * scale - 5}V5Z`}
+            />
+            <ellipse data-stack-cylinder cx={w / 2} cy="5" rx={w / 2} ry="5" />
+          </g>
+        ) : (
+          <>
+            <rect width={w} height={h * scale} fill={fill} stroke="#47695a" />
+            <path
+              d={`M0 0L12-10H${w + 12}V${h * scale - 10}L${w} ${h * scale}M${w} 0L${w + 12}-10`}
+              fill="none"
+              stroke="#47695a"
+            />
+          </>
+        )}
       </g>
     );
     content = svg(

@@ -2951,10 +2951,12 @@ export function build(d: Definition, v: Values): Lesson {
         "三种标准；其中两种得到相同分组，也仍然是不同标准。",
       ),
     );
-  if (d.book === 7 && d.n === 12)
+  if (d.book === 7 && d.n === 12) {
+    x.tasks[0].prompt = "第一座积木有多高（厘米）？";
     x.panels = [
       { kind: "stack", block: v.block, cube: v.cube, cylinder: v.cylinder },
     ];
+  }
   if (d.book === 3 && d.n === 21)
     x.panels = [
       { kind: "transfer", white: v.white, give: v.give, multiple: v.multiple },
