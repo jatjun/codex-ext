@@ -23,6 +23,12 @@ test("跨题本按类型汇总，原题条件和题号清楚可见", async ({ pa
 test("来源深链接显示完整原题，编辑后仍保留原始条件", async ({ page }) => {
   await page.goto("/?entry=pdf-12");
   await expect(page.getByRole("region", { name: "原题与问题" })).toBeVisible();
+  await expect(page.locator(".original-diagram img")).toBeVisible();
+  expect(
+    await page
+      .locator(".original-diagram img")
+      .evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth > 0),
+  ).toBe(true);
   const original = await page
     .getByRole("region", { name: "原题与问题" })
     .textContent();

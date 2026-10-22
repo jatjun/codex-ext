@@ -55,3 +55,10 @@ it("基础题保存快照可重做，缺失条件的旧迁移不会猜题", () =
     }),
   ).toThrow(/快照/);
 });
+
+it("看图题的原题目录也必须包含具体条件", () => {
+  const e = mathLibrary.find((e) => e.id === "pdf-12")!;
+  expect(e.story).toContain("原题条件：");
+  expect(e.fields!.length).toBeGreaterThan(0);
+  for (const f of e.fields!) expect(e.story).toContain(f.label + "＝");
+});

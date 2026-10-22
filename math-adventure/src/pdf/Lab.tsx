@@ -100,6 +100,7 @@ export function PdfLesson({ id, onExit }: { id: number; onExit: () => void }) {
       </div>
       <h1>{lesson.title}</h1>
       <OriginalQuestion
+        entryId={"pdf-" + id}
         story={buildLesson(id, defaultValues(id)).story}
         prompts={buildLesson(id, defaultValues(id)).tasks.map((t) => t.prompt)}
         source={"首份题本 · 原题" + id}

@@ -1,10 +1,12 @@
 import {
   buildLesson,
   defaultValues,
+  defaults as pdfFields,
   catalog as pdfCatalog,
 } from "../pdf/model";
 import {
   allAddresses,
+  fields as notebookFields,
   build as buildNotebook,
   valuesFor,
 } from "../notebooks/model";
@@ -25,7 +27,34 @@ export type LibraryEntry = {
   story: string;
   prompts: string[];
   pending?: string;
+  fields?: { key: string; label: string; value: number; choices?: string[] }[];
 };
+export function originalFields(
+  id: string,
+): { key: string; label: string; value: number; choices?: string[] }[] {
+  if (id.startsWith("pdf-")) return pdfFields(Number(id.slice(4)));
+  if (id.startsWith("book-")) {
+    const [, b, n] = id.split("-");
+    return notebookFields(b as "a" | "b", Number(n));
+  }
+  return workbooks.find((d) => d.id === id)?.fields || [];
+}
+export function originalLesson(id: string): Lesson | undefined {
+  if (id.startsWith("pdf-")) {
+    const n = Number(id.slice(4));
+    return buildLesson(n, defaultValues(n));
+  }
+  if (id.startsWith("book-")) {
+    const [, b, n] = id.split("-");
+    return buildNotebook(
+      b as "a" | "b",
+      Number(n),
+      valuesFor(b as "a" | "b", Number(n)),
+    );
+  }
+  const d = workbooks.find((d) => d.id === id);
+  return d && !d.pending ? buildWorkbook(d, workbookDefaults(d)) : undefined;
+}
 function topic(l: Lesson) {
   const s = l.scene;
   if (s.type === "workbook") {
@@ -75,7 +104,15 @@ const entry = (id: string, source: string, l: Lesson): LibraryEntry => ({
   source,
   title: l.title,
   topic: topic(l),
-  story: l.story,
+  story:
+    l.story +
+    (originalFields(id).length
+      ? "\n原题条件：" +
+        originalFields(id)
+          .map((f) => f.label + "＝" + (f.choices?.[f.value] ?? f.value))
+          .join("；")
+      : ""),
+  fields: originalFields(id),
   prompts: l.tasks.map((t) => t.prompt),
 });
 const baseEntry = (id: string, l: Level, group: string): LibraryEntry => ({

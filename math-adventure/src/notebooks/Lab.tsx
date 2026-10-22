@@ -101,6 +101,7 @@ export function NotebookLesson({
       </div>
       <h1>{lesson.title}</h1>
       <OriginalQuestion
+        entryId={`book-${book}-${number}`}
         story={build(book, number, valuesFor(book, number)).story}
         prompts={build(book, number, valuesFor(book, number)).tasks.map(
           (t) => t.prompt,

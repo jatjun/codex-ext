@@ -43,8 +43,16 @@ export function collect(storage, catalog) {
           : subject === "chinese"
             ? r.answerHistory
             : r.history;
-      const hasWrongSubmission = Array.isArray(history) && history.some(h=>h.correct===false&&(subject!=='math'||h.kind==='answer'));
-      const wrong = subject==='math' && Array.isArray(history) && history.length>0 ? hasWrongSubmission : r.firstCorrect===false || hasWrongSubmission;
+      const hasWrongSubmission =
+        Array.isArray(history) &&
+        history.some(
+          (h) =>
+            h.correct === false && (subject !== "math" || h.kind === "answer"),
+        );
+      const wrong =
+        subject === "math" && Array.isArray(history) && history.length > 0
+          ? hasWrongSubmission
+          : r.firstCorrect === false || hasWrongSubmission;
       const work = subject !== "math" && r.firstCorrect === null;
       if (!wrong && !work) continue;
       const id = subject === "math" ? r.levelId : r.lesson;
@@ -82,6 +90,17 @@ export function collect(storage, catalog) {
         condition,
       ]);
       const date = r.dateTime || r.date || "";
+      let extraConditions = "";
+      if (subject === "math" && !r.transfer && meta?.fields?.length) {
+        try {
+          const v = JSON.parse(r.parameters).original;
+          extraConditions =
+            "\n当时条件：" +
+            meta.fields
+              .map((f) => f.label + "＝" + (f.choices?.[v[f.key]] ?? v[f.key]))
+              .join("；");
+        } catch {}
+      }
       const item = {
         key,
         subject,
@@ -105,6 +124,7 @@ export function collect(storage, catalog) {
         metadataMissing:
           !r.questionText && (subject === "math" || r.phase !== "main"),
       };
+      item.story += extraConditions;
       const old = groups.get(key);
       if (!old) groups.set(key, item);
       else {

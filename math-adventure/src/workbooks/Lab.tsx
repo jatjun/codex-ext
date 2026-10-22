@@ -178,6 +178,7 @@ export function WorkbookLesson({
             </form>
           </details>
           <OriginalQuestion
+            entryId={d.id}
             story={build(d, defaults(d)).story}
             prompts={build(d, defaults(d)).tasks.map((t) => t.prompt)}
             source={`${d.book}册 · 原题${d.n}`}

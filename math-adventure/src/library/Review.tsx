@@ -1,3 +1,5 @@
+import { OriginalQuestion } from "./Library";
+import { originalFields } from "./catalog";
 import { entryForRecord } from "./catalog";
 import { buildLesson, buildRetryLesson } from "../pdf/model";
 import { variant as notebookVariant } from "../notebooks/model";
@@ -78,6 +80,26 @@ export function Review({ id, back }: { id: string; back: () => void }) {
         <LevelSession level={restored.level} onExit={back} />
       ) : (
         <main className="page-width">
+          <OriginalQuestion
+            story={
+              restored.lesson.story +
+              (!row.transfer
+                ? "\n当时条件：" +
+                  originalFields(row.levelId)
+                    .map(
+                      (f) =>
+                        f.label +
+                        "＝" +
+                        (f.choices?.[restored.values[f.key]] ??
+                          restored.values[f.key]),
+                    )
+                    .join("；")
+                : "")
+            }
+            prompts={[row.questionText || restored.lesson.tasks[0].prompt]}
+            snapshot={restored.lesson}
+            source="当时的条件快照"
+          />
           <PdfSession
             lesson={restored.lesson}
             values={restored.values}
