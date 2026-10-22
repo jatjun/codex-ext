@@ -46,11 +46,11 @@ async function open(page: Page, id: number) {
     .nth(id - 1)
     .click();
 }
-async function start(page: Page) {
+async function start(page: Page, timeout = 5000) {
   await page.getByRole("button", { name: "开始探索", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "提交答案", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout });
 }
 async function fillTask(page: Page, l: Lesson, t: Task) {
   if (t.pick) {
@@ -171,6 +171,7 @@ test("PDF hints escalate, explanation requires retry, first incorrect remains im
 test("PDF pause freezes actual positions; replay has no duplicate pieces; edits stay isolated", async ({
   page,
 }) => {
+  // A full 4-second replay needs rendering margin on shared WebKit CI runners.
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await open(page, 1);
   await page.getByRole("button", { name: "开始探索", exact: true }).click();
@@ -188,19 +189,19 @@ test("PDF pause freezes actual positions; replay has no duplicate pieces; edits 
   await page.getByRole("button", { name: "继续", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "提交答案", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15000 });
   await expect(page.locator("[data-piece]")).toHaveCount(20);
   await page.getByRole("button", { name: "重播动画", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "提交答案", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15000 });
   await expect(page.locator("[data-piece]")).toHaveCount(20);
   await page.locator(".pdf-config summary").click();
   await page.getByLabel("正方形数量", { exact: true }).fill("5");
   await page
     .getByRole("button", { name: "应用数字，重新开始", exact: true })
     .click();
-  await start(page);
+  await start(page, 15000);
   await expect(page.locator('[data-piece="正方形"]')).toHaveCount(5);
   await expect(page.locator("[data-piece]")).toHaveCount(18);
 });

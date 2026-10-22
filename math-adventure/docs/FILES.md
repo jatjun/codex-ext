@@ -103,6 +103,7 @@
 - `math-adventure/src/workbooks/Scene.tsx`
 - `math-adventure/src/workbooks/model.ts`
 - `math-adventure/src/workbooks/types.ts`
+- `math-adventure/tests/e2e/pdf.spec.ts`
 - `math-adventure/tests/e2e/workbooks.spec.ts`
 - `math-adventure/tests/workbooks.test.ts`
 - `math-adventure/vite.config.ts`
