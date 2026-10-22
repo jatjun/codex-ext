@@ -218,3 +218,56 @@ test("folded CSS normals agree with mathematical opposite-face pairs", async ({
   }
   await expect(page.locator(".panel")).toHaveCount(6);
 });
+
+test("voice completion barrier resumes after pause and ignores old speech callbacks", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const state = { paused: true, spoken: [] as any[] };
+    (window as any).__voice = state;
+    Object.defineProperty(window, "SpeechSynthesisUtterance", {
+      value: class {
+        constructor(public text: string) {}
+      },
+      configurable: true,
+    });
+    Object.defineProperty(window, "speechSynthesis", {
+      value: {
+        speak(u: any) {
+          state.spoken.push(u);
+        },
+        cancel() {},
+        pause() {
+          state.paused = true;
+        },
+        resume() {
+          state.paused = false;
+        },
+      },
+      configurable: true,
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: /换个位置看一看/ }).click();
+  await page.getByRole("button", { name: "开启语音", exact: true }).click();
+  await page.getByRole("button", { name: "开始探索", exact: true }).click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__voice.spoken.length))
+    .toBe(1);
+  await page.getByRole("button", { name: "暂停", exact: true }).click();
+  expect(await page.evaluate(() => (window as any).__voice.paused)).toBe(true);
+  await page.getByRole("button", { name: "继续", exact: true }).click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__voice.spoken.length))
+    .toBe(2);
+  expect(await page.evaluate(() => (window as any).__voice.paused)).toBe(false);
+  await page.evaluate(() => (window as any).__voice.spoken[0].onend());
+  await page.waitForTimeout(2500);
+  await expect(
+    page.getByRole("heading", { name: "第 1 步 / 5" }),
+  ).toBeVisible();
+  await page.evaluate(() => (window as any).__voice.spoken.at(-1).onend());
+  await expect(page.getByRole("heading", { name: "第 2 步 / 5" })).toBeVisible({
+    timeout: 6000,
+  });
+});

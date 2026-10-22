@@ -58,6 +58,7 @@ function App() {
     setSpeaking(false);
   }
   function stop() {
+    generation.current++;
     setPlaying(false);
     pausedAnimations.current = [
       ...new Set([
@@ -151,6 +152,7 @@ function App() {
     u.onend = u.onerror = () => {
       if (g === generation.current) setSpeaking(false);
     };
+    speechSynthesis.resume();
     speechSynthesis.speak(u);
     const fallback = setTimeout(() => {
       if (g === generation.current) {
@@ -705,6 +707,7 @@ function App() {
                   if (window.speechSynthesis) {
                     const u = new SpeechSynthesisUtterance(narration);
                     u.lang = "zh-CN";
+                    speechSynthesis.resume();
                     speechSynthesis.speak(u);
                   } else setMessage("此浏览器不支持语音，请阅读当前步骤文字。");
                 }}
