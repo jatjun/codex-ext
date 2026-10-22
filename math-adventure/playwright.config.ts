@@ -8,11 +8,18 @@ export default defineConfig({
     trace: "retain-on-failure",
     reducedMotion: "reduce",
   },
-  webServer: {
-    command: "npm run dev -- --port 4173",
-    url: "http://127.0.0.1:4173",
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: "npm run dev -- --port 4173",
+      url: "http://127.0.0.1:4173",
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: "node ../scripts/serve-learning.mjs --port 4198",
+      url: "http://127.0.0.1:4198/mistakes.html",
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     {

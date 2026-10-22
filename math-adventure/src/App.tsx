@@ -1,8 +1,13 @@
+import { Review } from "./library/Review";
+import { mathLibrary } from "./library/catalog";
+import { catalog as workbookCatalog } from "./workbooks/model";
+import { Library } from "./library/Library";
+import type { LibraryEntry } from "./library/catalog";
 import { WorkbooksMap, WorkbookLesson } from "./workbooks/Lab";
 import type { Definition } from "./workbooks/types";
 import { NotebookMap, NotebookLesson } from "./notebooks/Lab";
 import type { Address } from "./notebooks/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PdfMap, PdfLesson } from "./pdf/Lab";
 import { levels, type LevelId } from "./questions/data";
 import type { Settings, QueueKind } from "./questions/models";
@@ -20,12 +25,21 @@ function Brand() {
   );
 }
 export default function App() {
+  const [reviewId, setReviewId] = useState(() =>
+    new URLSearchParams(location.search).get("review"),
+  );
   const [workbook, setWorkbook] = useState<Definition | null>(null);
   const [notebook, setNotebook] = useState<Address | null>(null);
   const [pdfId, setPdfId] = useState<number | null>(null);
   const [queueKind, setQueueKind] = useState<QueueKind | null>(null);
   const [page, setPage] = useState<
-      LevelId | "home" | "report" | "pdf" | "notebooks" | "workbooks"
+      | LevelId
+      | "home"
+      | "report"
+      | "pdf"
+      | "notebooks"
+      | "workbooks"
+      | "library"
     >("home"),
     [visit, setVisit] = useState(0);
   const completed = (id: LevelId) => {
@@ -40,6 +54,8 @@ export default function App() {
     );
   };
   const navigate = (p: typeof page) => {
+    setReviewId(null);
+    history.replaceState(null, "", location.pathname);
     setPage(p);
     setQueueKind(null);
     setPdfId(null);
@@ -48,10 +64,42 @@ export default function App() {
     setVisit((v) => v + 1);
     window.scrollTo({ top: 0 });
   };
+  const chooseEntry = (e: LibraryEntry) => {
+    if (e.id.startsWith("pdf-")) {
+      navigate("pdf");
+      setPdfId(Number(e.id.slice(4)));
+    } else if (e.id.startsWith("book-")) {
+      const [, book, n] = e.id.split("-");
+      navigate("notebooks");
+      setNotebook({ book: book as "a" | "b", number: Number(n) });
+    } else if (e.id.startsWith("morning-")) {
+      navigate("workbooks");
+      setWorkbook(workbookCatalog.find((d) => d.id === e.id) || null);
+    } else if (e.id.startsWith("queue-")) {
+      navigate("queue");
+      setQueueKind(e.id.slice(6) as QueueKind);
+    } else navigate(e.id as LevelId);
+  };
+  useEffect(() => {
+    const e = mathLibrary.find(
+      (e) => e.id === new URLSearchParams(location.search).get("entry"),
+    );
+    if (e) chooseEntry(e);
+  }, []);
   return (
     <>
       <header className="site-header">
-        <a href="../" style={{ display: "block", textAlign: "center", padding: "6px", fontSize: "12px" }}>← 学科首页 · 数学 / 语文</a>
+        <a
+          href="../"
+          style={{
+            display: "block",
+            textAlign: "center",
+            padding: "6px",
+            fontSize: "12px",
+          }}
+        >
+          ← 学科首页 · 数学 / 语文 / 英语
+        </a>
         <div className="page-width header-inner">
           <button
             className="brand-button"
@@ -60,6 +108,9 @@ export default function App() {
           >
             <Brand />
           </button>
+          <a className="notebook-link" href="../mistakes.html?subject=math">
+            我的错题本
+          </a>
           <button
             className={"parent-link " + (page === "report" ? "active" : "")}
             onClick={() => navigate("report")}
@@ -68,7 +119,9 @@ export default function App() {
           </button>
         </div>
       </header>
-      {page === "home" ? (
+      {reviewId ? (
+        <Review id={reviewId} back={() => navigate("library")} />
+      ) : page === "home" ? (
         <main className="home page-width">
           <section className="hero">
             <div className="hero-copy">
@@ -124,6 +177,16 @@ export default function App() {
               <span className="lab-triangle">△</span>
               <span className="lab-coin">¥</span>
             </div>
+          </section>
+          <section className="queue-feature">
+            <div>
+              <span className="eyebrow">按题型汇总 / 原题看得清</span>
+              <h2>先找到原题，再看动画、做练习。</h2>
+              <p>排队、余数、钟表、购物、图形……同类题放在一起。</p>
+            </div>
+            <button className="primary" onClick={() => navigate("library")}>
+              按题型找原题 →
+            </button>
           </section>
           <section className="queue-feature nb-feature">
             <div>
@@ -259,6 +322,8 @@ export default function App() {
             </span>
           </section>
         </main>
+      ) : page === "library" ? (
+        <Library choose={chooseEntry} back={() => navigate("home")} />
       ) : page === "workbooks" ? (
         workbook ? (
           <WorkbookLesson

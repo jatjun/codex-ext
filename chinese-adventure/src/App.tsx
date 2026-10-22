@@ -31,9 +31,20 @@ const icons = {
   dictionary: "册",
   story: "✦",
 };
+function linkedReview() {
+  const id = new URLSearchParams(location.search).get("review");
+  return id ? readRecords().find((r) => r.id === id) : undefined;
+}
+function linkedLesson() {
+  const q = new URLSearchParams(location.search);
+  return (
+    lessons.find((l) => l.id === (linkedReview()?.lesson || q.get("lesson"))) ||
+    null
+  );
+}
 function App() {
   const [page, setPage] = useState<"home" | "report">("home"),
-    [lesson, setLesson] = useState<Lesson | null>(null),
+    [lesson, setLesson] = useState<Lesson | null>(linkedLesson),
     [book, setBook] = useState(1),
     [search, setSearch] = useState("");
   useEffect(() => {
@@ -42,6 +53,7 @@ function App() {
       : "语文小花园 · Chinese Adventure";
   }, [lesson]);
   const home = () => {
+    history.replaceState(null, "", location.pathname);
     setLesson(null);
     setPage("home");
     window.scrollTo(0, 0);
@@ -58,6 +70,7 @@ function App() {
           </button>
           <nav>
             <a href="../">学科首页 ↗</a>
+            <a href="../mistakes.html?subject=chinese">我的错题本</a>
             <button
               onClick={() => {
                 setLesson(null);
@@ -191,6 +204,8 @@ function App() {
   );
 }
 function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
+  const linkedRow =
+    linkedReview()?.lesson === lesson.id ? linkedReview() : undefined;
   const [s, setS] = useState<Teaching>({ ...initial }),
     [step, setStep] = useState(0),
     [progress, setProgress] = useState(0),
@@ -199,8 +214,14 @@ function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
     [voiceDone, setVoiceDone] = useState(true),
     [voiceMessage, setVoiceMessage] = useState(""),
     [model, setModel] = useState(0),
-    [index, setIndex] = useState(0),
-    [phase, setPhase] = useState<"main" | "retry" | "transfer">("main"),
+    [index, setIndex] = useState(
+      linkedRow?.phase === "main"
+        ? Math.max(0, Math.min(linkedRow.task, lesson.tasks.length - 1))
+        : 0,
+    ),
+    [phase, setPhase] = useState<"main" | "retry" | "transfer">(
+      linkedRow?.phase || "main",
+    ),
     [answer, setAnswer] = useState<string | string[]>(""),
     [selected, setSelected] = useState<number | null>(null),
     [checks, setChecks] = useState<boolean[]>([]),
@@ -331,6 +352,7 @@ function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
       task: index,
       phase,
       date: now,
+      questionText: task.prompt,
       firstAnswer: "",
       firstCorrect: null,
       latestCorrect: null,

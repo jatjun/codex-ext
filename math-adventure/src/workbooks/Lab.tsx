@@ -1,3 +1,4 @@
+import { OriginalQuestion } from "../library/Library";
 import { useMemo, useState } from "react";
 import { PdfSession } from "../pdf/Lab";
 import { readRecords } from "../records/store";
@@ -176,6 +177,11 @@ export function WorkbookLesson({
               <button className="primary">应用条件，重新开始</button>
             </form>
           </details>
+          <OriginalQuestion
+            story={build(d, defaults(d)).story}
+            prompts={build(d, defaults(d)).tasks.map((t) => t.prompt)}
+            source={`${d.book}册 · 原题${d.n}`}
+          />
           {d.note && <p className="wb-source-note">题图说明：{d.note}</p>}
           <PdfSession
             key={d.id + ":" + revision}

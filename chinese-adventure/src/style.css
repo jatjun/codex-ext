@@ -1048,3 +1048,4 @@ summary {
   min-width: 44px;
   padding: 5px;
 }
+header .header-inner{flex-wrap:wrap;gap:10px}header nav{flex-wrap:wrap;gap:10px}header nav a{min-height:44px;display:inline-flex;align-items:center}

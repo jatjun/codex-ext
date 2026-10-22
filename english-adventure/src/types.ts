@@ -124,6 +124,7 @@ export type Stage =
   | "TRANSFER"
   | "COMPLETE";
 export interface RecordRow {
+  questionText?: string;
   id: string;
   session: string;
   lesson: string;

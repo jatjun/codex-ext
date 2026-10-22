@@ -1,3 +1,4 @@
+import { OriginalQuestion } from "../library/Library";
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Narrator } from "../audio/speech";
 import { useAnimation } from "../animation/useAnimation";
@@ -98,6 +99,11 @@ export function PdfLesson({ id, onExit }: { id: number; onExit: () => void }) {
         错题 {id} / {lesson.topic}
       </div>
       <h1>{lesson.title}</h1>
+      <OriginalQuestion
+        story={buildLesson(id, defaultValues(id)).story}
+        prompts={buildLesson(id, defaultValues(id)).tasks.map((t) => t.prompt)}
+        source={"首份题本 · 原题" + id}
+      />
       <details className="pdf-config">
         <summary>⚙ 调整本题数字</summary>
         <form
@@ -233,6 +239,8 @@ export function PdfSession({
       records.current[key] = {
         ...r,
         questionText: currentTask.prompt,
+        storyText: currentLesson.story,
+        lessonSnapshot: currentLesson,
         parameters: JSON.stringify({
           original: values,
           transfer: teaching.transfer,
@@ -560,6 +568,7 @@ export function PdfSession({
                   ? "新数字，自己来"
                   : "观察之后，自己试"}
             </span>
+            <p className="source-problem">{activeLesson.story}</p>
             <h2>{currentTask.prompt}</h2>
           </div>
           <div className="paper pdf-stage" inert={paused || undefined}>

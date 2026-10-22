@@ -1407,3 +1407,4 @@ progress {
     scroll-behavior: auto !important;
   }
 }
+header .header-wrap{flex-wrap:wrap;gap:10px}header nav{flex-wrap:wrap;gap:10px}header nav a{min-height:44px;display:inline-flex;align-items:center}

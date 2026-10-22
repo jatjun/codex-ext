@@ -66,3 +66,7 @@ React+TypeScript+Vite；生产依赖仅React和ReactDOM。动画采用SVG、requ
 沿用`.github/workflows/math-adventure.yml`，分别检查三科，统一组装`learning-home/index.html`和三个子目录。Vite使用相对base。Pages Source为GitHub Actions，现有`MATH_ADVENTURE_PAGES_ENABLED=true`控制发布。发布分支仍为`codex/math-adventure-v1`，不合并main。新功能先在独立分支验证，保留旧版本备份。
 
 后续可加入经授权的真人音频、更多原创情境、跨设备可选同步和教师审核；首版不实现账户、付费、语音识别或AI辅导。
+
+## 我的错题本
+
+页眉「我的错题本」进入三科共用的错题回顾页，保存首次作答、支持重做和自行标记复习。详情与旧记录边界见[复习说明](../docs/REVIEW_NOTEBOOKS.md)。

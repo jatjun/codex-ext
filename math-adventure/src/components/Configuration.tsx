@@ -1,3 +1,4 @@
+import { OriginalQuestion } from "../library/Library";
 import { useMemo, useState } from "react";
 import { LevelSession } from "./LevelSession";
 import { buildLevel, buildQueueLevel } from "../questions/builders";
@@ -182,6 +183,20 @@ export function ConfiguredLesson({
             {message}
           </p>
         </details>
+      </section>
+      <section className="page-width">
+        <OriginalQuestion
+          story={
+            (id === "queue"
+              ? buildQueueLevel(defaultQueue(queue.kind))
+              : buildLevel(id, defaults)
+            ).story
+          }
+          prompts={(id === "queue"
+            ? buildQueueLevel(defaultQueue(queue.kind))
+            : buildLevel(id, defaults)
+          ).questions.map((q) => q.prompt)}
+        />
       </section>
       <LevelSession key={version} level={level} onExit={onExit} />
     </>

@@ -81,6 +81,8 @@ export function LevelSession({
       r = {
         ...newEntry(session.current, level.id, q.id, stateRef.current.transfer),
         questionText: q.prompt,
+        storyText: stateRef.current.transfer ? q.prompt : level.story,
+        questionSnapshot: q,
         parameters: JSON.stringify(
           stateRef.current.transfer ? level.transferModel : level.model,
         ),

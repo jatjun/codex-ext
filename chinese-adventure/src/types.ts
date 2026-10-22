@@ -46,6 +46,7 @@ export interface Teaching {
   needsRetry: boolean;
 }
 export interface RecordRow {
+  questionText?: string;
   id: string;
   session: string;
   lesson: string;

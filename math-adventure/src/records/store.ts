@@ -12,6 +12,9 @@ export type RecordEntry = {
   levelId: string;
   questionId: string;
   questionText?: string;
+  storyText?: string;
+  lessonSnapshot?: import("../pdf/model").Lesson;
+  questionSnapshot?: import("../questions/data").Question;
   parameters?: string;
   lessonTitle?: string;
   requiredQuestionIds?: string[];

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>我的三科错题本 · 学习小花园</title>
+    <link rel="stylesheet" href="./mistakes.css" />
+    <script type="module" src="./mistakes.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="./">← 学科首页</a><strong>学习小花园</strong
+      ><span>只在当前浏览器保存</span>
+    </header>
+    <main>
+      <span class="eyebrow">SMALL STEPS. ANOTHER DISCOVERY.</span>
+      <h1>我的三科错题本</h1>
+      <p class="intro">
+        把没弄明白的题留下来，换一天再试一次。首次错答和后来的进步都会保留。
+      </p>
+      <nav id="subjects" aria-label="选择学科"></nav>
+      <section class="toolbar">
+        <label
+          >寻找一道题<input
+            id="search"
+            type="search"
+            placeholder="题目、来源或题型" /></label
+        ><label
+          >复习状态<select id="status">
+            <option value="pending">待巩固错题</option>
+            <option value="reviewed">已复习（自行标记）</option>
+            <option value="works">口语与表达自查作品</option>
+            <option value="all">全部错题</option>
+          </select></label
+        ><button id="export">导出当前筛选 JSON</button>
+      </section>
+      <p id="notice" role="alert"></p>
+      <p id="count" role="status"></p>
+      <section id="groups"></section>
+      <aside>
+        <h2>错题本怎么用？</h2>
+        <ol>
+          <li>
+            三科客观题实际提交答错后，会自动收进来。没有做过的题不会自动当成错题。
+          </li>
+          <li>
+            点“回到这道题重做”，会建立新的练习记录，保留最初错答。复习完成后可自行标记，标记不代表系统确认已经掌握。
+          </li>
+          <li>口语、画画和自由表达单列为自查作品，不根据参考句自动判错。</li>
+        </ol>
+        <p>
+          原始记录仍在各科家长手记中。请在原来学习的设备和浏览器打开；清理网站数据、无痕模式或换设备可能无法保留记录。旧记录缺少题干或条件时会提示，不能保证还原缺失信息。
+        </p>
+      </aside>
+    </main>
+  </body>
+</html>

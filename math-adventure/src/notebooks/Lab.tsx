@@ -1,3 +1,4 @@
+import { OriginalQuestion } from "../library/Library";
 import { useMemo, useState } from "react";
 import { PdfSession } from "../pdf/Lab";
 import { readRecords } from "../records/store";
@@ -99,6 +100,13 @@ export function NotebookLesson({
         {book === "a" ? "A" : "B"}册 · {bookNames[book]} · 原题{number}
       </div>
       <h1>{lesson.title}</h1>
+      <OriginalQuestion
+        story={build(book, number, valuesFor(book, number)).story}
+        prompts={build(book, number, valuesFor(book, number)).tasks.map(
+          (t) => t.prompt,
+        )}
+        source={`${book.toUpperCase()}册 · 原题${number}`}
+      />
       <details className="pdf-config">
         <summary>⚙ 调整数字、尺寸或方向</summary>
         <form

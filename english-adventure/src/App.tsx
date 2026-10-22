@@ -18,12 +18,24 @@ const kindNames = {
   timetable: "课程表设计",
   schoolbag: "书包工作室",
 };
+function linkedReview() {
+  const id = new URLSearchParams(location.search).get("review");
+  return id ? readRecords().find((r) => r.id === id) : undefined;
+}
+function linkedLesson() {
+  const q = new URLSearchParams(location.search);
+  return (
+    lessons.find((l) => l.id === (linkedReview()?.lesson || q.get("lesson"))) ||
+    null
+  );
+}
 function App() {
-  const [lesson, setLesson] = useState<Lesson | null>(null),
+  const [lesson, setLesson] = useState<Lesson | null>(linkedLesson),
     [page, setPage] = useState<"home" | "report">("home"),
     [book, setBook] = useState(1),
     [search, setSearch] = useState("");
   const home = () => {
+    history.replaceState(null, "", location.pathname);
     setLesson(null);
     setPage("home");
     window.scrollTo(0, 0);
@@ -46,6 +58,7 @@ function App() {
           </button>
           <nav>
             <a href="../">学科首页 ↗</a>
+            <a href="../mistakes.html?subject=english">我的错题本</a>
             <button
               onClick={() => {
                 setLesson(null);
@@ -220,7 +233,9 @@ function App() {
                     }}
                   >
                     <div className={"card-art " + l.kind}>
-                      <Art name={l.kind === "listen" ? "owl" : l.tasks[0].scene} />
+                      <Art
+                        name={l.kind === "listen" ? "owl" : l.tasks[0].scene}
+                      />
                       <span>{String(l.number).padStart(2, "0")}</span>
                     </div>
                     <span className="lesson-type">
@@ -265,14 +280,25 @@ function App() {
   );
 }
 function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
+  const linkedRow =
+    linkedReview()?.lesson === lesson.id ? linkedReview() : undefined;
   const [stage, setStage] = useState<Stage>("INTRO"),
     [step, setStep] = useState(0),
     [progress, setProgress] = useState(0),
     [paused, setPaused] = useState(false),
     [muted, setMuted] = useState(false),
     [rate, setRate] = useState(0.85),
-    [phase, setPhase] = useState<"main" | "retry" | "transfer">("main"),
-    [index, setIndex] = useState(0),
+    [phase, setPhase] = useState<"main" | "retry" | "transfer">(
+      linkedRow?.phase || "main",
+    ),
+    [index, setIndex] = useState(
+      linkedRow?.phase === "main"
+        ? Math.max(
+            0,
+            lesson.tasks.findIndex((t) => t.id === linkedRow.task),
+          )
+        : 0,
+    ),
     [answer, setAnswer] = useState<Answer>(emptyAnswer),
     [errors, setErrors] = useState(0),
     [solved, setSolved] = useState(false),
@@ -342,6 +368,7 @@ function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
       task: task.id,
       phase,
       date: now,
+      questionText: task.prompt,
       firstAnswer: null,
       firstCorrect: null,
       firstAssisted: false,

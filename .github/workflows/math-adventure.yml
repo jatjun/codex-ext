@@ -8,6 +8,7 @@ on:
         "chinese-adventure/**",
         "english-adventure/**",
         "learning-home/**",
+        "scripts/**",
         ".github/workflows/math-adventure.yml",
       ]
   pull_request:
@@ -17,6 +18,7 @@ on:
         "chinese-adventure/**",
         "english-adventure/**",
         "learning-home/**",
+        "scripts/**",
         ".github/workflows/math-adventure.yml",
       ]
   workflow_dispatch:
@@ -46,6 +48,12 @@ jobs:
           cache: npm
           cache-dependency-path: ${{ matrix.project }}/package-lock.json
       - run: npm ci
+      - name: Verify shared question catalog
+        if: matrix.project == 'math-adventure'
+        working-directory: .
+        run: |
+          node scripts/build-learning-catalog.mjs --check
+          node --test scripts/mistakes.test.mjs
       - run: npm test
       - run: npm run build
       - run: npm run test:e2e -- --workers=2
@@ -75,7 +83,7 @@ jobs:
           cp -R site-builds/math-adventure-site/. learning-site/math-adventure/
           cp -R site-builds/chinese-adventure-site/. learning-site/chinese-adventure/
           cp -R site-builds/english-adventure-site/. learning-site/english-adventure/
-          cp learning-home/index.html learning-site/index.html
+          cp learning-home/* learning-site/
           touch learning-site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
