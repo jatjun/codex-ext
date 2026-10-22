@@ -315,7 +315,7 @@ add(1, "门口挥挥手", "A goodbye at the door", "greeting", [
     "这是离开教室的告别，选Bye。",
   ),
 ]);
-add(1, "把问好写下来", "A friendly hello", "listen", [
+add(1, "把问好写下来", "Listen and write", "listen", [
   fill(
     "write-hello",
     "看见面场景，听录音，再写出问好的单词。",
@@ -403,7 +403,7 @@ add(
     fill("transfer-ink", "看墨水瓶，写出单词。", "ink", "ink"),
   ],
 );
-add(1, "大象的 e", "Elephant’s alphabet", "listen", [
+add(1, "听声音，补字母", "A missing letter", "listen", [
   choice(
     "elephant-gap",
     "听单词，给 __lephant 选择开头字母。",
@@ -414,7 +414,7 @@ add(1, "大象的 e", "Elephant’s alphabet", "listen", [
     { listen: ["elephant"], caseSensitive: true },
   ),
 ]);
-add(1, "追着小蜜蜂听", "Follow the bee", "listen", [
+add(1, "听见哪位小伙伴", "Listen and discover", "listen", [
   wordChoice("listen-bee", "bee", ["bee", "apple", "bear"], ["bee"]),
 ]);
 add(1, "谁和 bear 同开头", "Beginning sounds", "phonics", [
@@ -430,7 +430,7 @@ add(1, "谁和 bear 同开头", "Beginning sounds", "phonics", [
 ]);
 add(
   1,
-  "听见箭头",
+  "听见哪种图案",
   "Listen to the whole word",
   "listen",
   [
@@ -441,7 +441,7 @@ add(
       ["arrow"],
     ),
   ],
-  "arrow、apple和alligator都可能以/æ/开头，本题应听完整单词，不只辨第一个音。",
+  "本题三个选项的首音相同，应听完整单词，不能只辨第一个音。",
 );
 add(1, "大写 A 花田", "Capital letter garden", "letters", [
   count("big-A", ["A", "a", "A", "a", "A", "a", "A", "a"], "A"),
@@ -566,7 +566,7 @@ add(2, "一起玩吧", "Let’s play together", "sentence", [
     "play",
   ),
 ]);
-add(2, "听到 Hi 了吗", "A short listening hello", "listen", [
+add(2, "问候听写站", "Listen for a greeting", "listen", [
   fill("hi-gap", "听录音，补全：____! I’m Sarah.", "Hi", "hello", {
     listen: ["Hi! I'm Sarah."],
     caseSensitive: true,
@@ -721,7 +721,7 @@ add(
   "可手绘、放物品并介绍；This/These的示例由当前实际数量生成。",
   openVariants("bag"),
 );
-add(2, "铅笔怎么拼", "Listen and spell pencil", "listen", [
+add(2, "文具听写站", "Hear and spell", "listen", [
   fill("pencil", "看铅笔，听完整单词，再写出拼写。", "pencil", "pencil", {
     listen: ["pencil"],
   }),

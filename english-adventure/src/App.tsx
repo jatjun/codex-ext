@@ -220,7 +220,7 @@ function App() {
                     }}
                   >
                     <div className={"card-art " + l.kind}>
-                      <Art name={l.tasks[0].scene} />
+                      <Art name={l.kind === "listen" ? "owl" : l.tasks[0].scene} />
                       <span>{String(l.number).padStart(2, "0")}</span>
                     </div>
                     <span className="lesson-type">
