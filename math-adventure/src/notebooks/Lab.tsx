@@ -1,3 +1,8 @@
+import {
+  useVisibility,
+  VisibilityTools,
+  VisibilityCheck,
+} from "../components/Visibility";
 import { OriginalQuestion } from "../library/Library";
 import { useMemo, useState } from "react";
 import { PdfSession } from "../pdf/Lab";
@@ -18,6 +23,7 @@ export function NotebookMap({
   onChoose: (address: Address) => void;
   onBack: () => void;
 }) {
+  const visibility = useVisibility("math");
   const records = readRecords();
   return (
     <main className="page-width pdf-map">
@@ -33,6 +39,7 @@ export function NotebookMap({
         <a href="#notebook-a">A册 · 质量与应用 ↓</a>
         <a href="#notebook-b">B册 · 运算与空间 ↓</a>
       </nav>
+      <VisibilityTools v={visibility} ids={allAddresses.map((a) => a.id)} />
       {(["a", "b"] as Book[]).map((book) => (
         <section key={book} id={"notebook-" + book}>
           <h2>
@@ -41,25 +48,32 @@ export function NotebookMap({
           </h2>
           <div className="pdf-card-grid">
             {allAddresses
-              .filter((a) => a.book === book)
+              .filter(
+                (a) =>
+                  a.book === book &&
+                  (visibility.showAll || !visibility.isHidden(a.id)),
+              )
               .map((a) => (
-                <button
-                  className="pdf-card notebook-card"
-                  key={a.id}
-                  onClick={() => onChoose(a)}
-                >
-                  <span>
-                    {book === "a" ? "A" : "B"}册 · 原题{a.number}
-                  </span>
-                  <h3>{a.title}</h3>
-                  <p>
-                    {records.some(
-                      (r) => r.levelId === a.id && r.transfer && r.completed,
-                    )
-                      ? "✓ 已探索 · 再来一次"
-                      : "观察 · 亲手试 · 新数字再做 →"}
-                  </p>
-                </button>
+                <div className="lesson-item" key={a.id}>
+                  <button
+                    className="pdf-card notebook-card"
+                    key={a.id}
+                    onClick={() => onChoose(a)}
+                  >
+                    <span>
+                      {book === "a" ? "A" : "B"}册 · 原题{a.number}
+                    </span>
+                    <h3>{a.title}</h3>
+                    <p>
+                      {records.some(
+                        (r) => r.levelId === a.id && r.transfer && r.completed,
+                      )
+                        ? "✓ 已探索 · 再来一次"
+                        : "观察 · 亲手试 · 新数字再做 →"}
+                    </p>
+                  </button>
+                  <VisibilityCheck v={visibility} id={a.id} title={a.title} />
+                </div>
               ))}
           </div>
         </section>

@@ -1,3 +1,8 @@
+import {
+  useVisibility,
+  VisibilityTools,
+  VisibilityCheck,
+} from "../components/Visibility";
 import { PdfScene } from "../pdf/Scene";
 import { useState, useLayoutEffect, useRef } from "react";
 import { mathLibrary, originalLesson, type LibraryEntry } from "./catalog";
@@ -32,11 +37,32 @@ function StaticDiagram({ lesson }: { lesson: import("../pdf/model").Lesson }) {
         encodeURIComponent(new XMLSerializer().serializeToString(copy)),
     );
   }, []);
+  if (lesson.scene.type === "shop")
+    return (
+      <div className="original-shop static-source-ready">
+        {lesson.scene.threshold !== undefined && (
+          <p>
+            每单满{lesson.scene.threshold}元减{lesson.scene.discount}元
+          </p>
+        )}
+        <div>
+          {lesson.scene.items.map((it) => (
+            <figure key={it.id}>
+              <span>{it.icon}</span>
+              <figcaption>
+                {it.name} · {it.price}元
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    );
   if (src)
     return (
       <img
         src={src}
         alt="原题静态示意图"
+        className="static-source-ready"
         style={{ display: "block", width: "100%", height: "auto" }}
       />
     );
@@ -53,9 +79,7 @@ function StaticDiagram({ lesson }: { lesson: import("../pdf/model").Lesson }) {
         onSelect={() => {}}
         grouped={false}
         onGroup={() => {}}
-        counts={
-          lesson.scene.type === "shop" ? lesson.scene.items.map(() => 0) : []
-        }
+        counts={[]}
         onCount={() => {}}
         counting={false}
         demonstrating={false}
@@ -112,17 +136,21 @@ export function Library({
   choose: (e: LibraryEntry) => void;
   back: () => void;
 }) {
+  const visibility = useVisibility("math");
   const [topic, setTopic] = useState("全部"),
     [search, setSearch] = useState(""),
     [limit, setLimit] = useState(24);
   const topics = ["全部", ...new Set(mathLibrary.map((e) => e.topic))],
-    rows = mathLibrary.filter(
+    candidates = mathLibrary.filter(
       (e) =>
         (topic === "全部" || e.topic === topic) &&
         `${e.title} ${e.story} ${e.prompts.join(" ")} ${e.source}`.includes(
           search,
         ),
     );
+  const rows = candidates.filter(
+    (e) => visibility.showAll || !visibility.isHidden(e.id),
+  );
   return (
     <main className="page-width question-library">
       <button onClick={back}>← 回到冒险地图</button>
@@ -158,12 +186,14 @@ export function Library({
           placeholder="例如：余数、15人、钟表"
         />
       </label>
+      <VisibilityTools v={visibility} ids={candidates.map((e) => e.id)} />
       <p role="status">
         找到 {rows.length} 道题 · 已显示 {Math.min(limit, rows.length)} 道
       </p>
       <div className="library-grid">
         {rows.slice(0, limit).map((e) => (
           <article key={e.id}>
+            <VisibilityCheck v={visibility} id={e.id} title={e.title} />
             <small>
               {e.topic} / {e.source}
             </small>

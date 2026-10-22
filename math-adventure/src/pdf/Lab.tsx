@@ -1,3 +1,8 @@
+import {
+  useVisibility,
+  VisibilityTools,
+  VisibilityCheck,
+} from "../components/Visibility";
 import { OriginalQuestion } from "../library/Library";
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Narrator } from "../audio/speech";
@@ -30,6 +35,7 @@ export function PdfMap({
   onChoose: (id: number) => void;
   onBack: () => void;
 }) {
+  const visibility = useVisibility("math");
   const records = readRecords();
   return (
     <main className="page-width pdf-map">
@@ -41,36 +47,49 @@ export function PdfMap({
       <p className="lead">
         按这次错题本整理。先观察，再操作，再独立做一道数字不同的题。每题都可以调整数字。
       </p>
+      <VisibilityTools
+        v={visibility}
+        ids={catalog.map((_, i) => "pdf-" + (i + 1))}
+      />
       {["图形计数", "前后位置", "分类与位置", "数量关系", "购物策略"].map(
         (topic) => (
           <section key={topic}>
             <h2>{topic}</h2>
             <div className="pdf-card-grid">
               {catalog.map(([title, t], i) =>
-                t === topic ? (
-                  <button
-                    key={i}
-                    className="pdf-card"
-                    onClick={() => onChoose(i + 1)}
-                  >
-                    <span>
-                      错题 {String(i + 1).padStart(2, "0")}{" "}
-                      <span aria-hidden="true">
-                        {i < 6 ? "◒" : i < 11 ? "⚑" : i < 15 ? "✦" : "🛒"}
+                t === topic &&
+                (visibility.showAll ||
+                  !visibility.isHidden("pdf-" + (i + 1))) ? (
+                  <div className="lesson-item" key={i}>
+                    <button
+                      key={i}
+                      className="pdf-card"
+                      onClick={() => onChoose(i + 1)}
+                    >
+                      <span>
+                        错题 {String(i + 1).padStart(2, "0")}{" "}
+                        <span aria-hidden="true">
+                          {i < 6 ? "◒" : i < 11 ? "⚑" : i < 15 ? "✦" : "🛒"}
+                        </span>
                       </span>
-                    </span>
-                    <h3>{title}</h3>
-                    <p>
-                      {records.some(
-                        (r) =>
-                          r.levelId === "pdf-" + (i + 1) &&
-                          r.transfer &&
-                          r.completed,
-                      )
-                        ? "✓ 已完成迁移 · 再探索"
-                        : "观察 · 操作 · 独立练习 →"}
-                    </p>
-                  </button>
+                      <h3>{title}</h3>
+                      <p>
+                        {records.some(
+                          (r) =>
+                            r.levelId === "pdf-" + (i + 1) &&
+                            r.transfer &&
+                            r.completed,
+                        )
+                          ? "✓ 已完成迁移 · 再探索"
+                          : "观察 · 操作 · 独立练习 →"}
+                      </p>
+                    </button>
+                    <VisibilityCheck
+                      v={visibility}
+                      id={"pdf-" + (i + 1)}
+                      title={title}
+                    />
+                  </div>
                 ) : null,
               )}
             </div>

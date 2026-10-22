@@ -1,3 +1,4 @@
+import { readVisibility, saveVisibility } from "./visibility-model.js";
 import { collect, subjects, textAnswer, reviewURL } from "./mistakes-model.js";
 const topicLabels = {
   pinyin: "拼音",
@@ -31,19 +32,22 @@ let catalog,
   items = [],
   shown = [],
   subject = new URLSearchParams(location.search).get("subject") || "all";
-if (!Object.hasOwn(subjects,subject)) subject = "all";
+if (!Object.hasOwn(subjects, subject)) subject = "all";
 const markerKey = "learning-garden.review-status.v1";
 let markers = {};
 try {
   const data = JSON.parse(localStorage.getItem(markerKey) || "{}");
   if (data && typeof data === "object" && !Array.isArray(data)) markers = data;
 } catch {}
+let showHidden = false;
 function render() {
+  const hidden = readVisibility();
   const query = $("search").value.trim(),
     status = $("status").value;
   shown = items.filter(
     (i) =>
       (subject === "all" || subject === i.subject) &&
+      (showHidden || !hidden["mistake:" + i.key]) &&
       `${i.title} ${i.prompt} ${i.story} ${i.topic} ${i.source}`.includes(
         query,
       ) &&
@@ -92,6 +96,30 @@ function render() {
       (i) => subjects[i.subject] + " · " + i.topic === topic,
     )) {
       const card = el("article", undefined, "card");
+      const checkLabel = el("label", undefined, "mistake-visibility"),
+        check = el("input");
+      check.type = "checkbox";
+      check.checked = !hidden["mistake:" + item.key];
+      check.setAttribute("aria-label", "显示这道错题：" + item.title);
+      check.onchange = () => {
+        if (
+          saveVisibility(
+            readVisibility(),
+            ["mistake:" + item.key],
+            check.checked,
+          )
+        )
+          render();
+        else {
+          $("notice").textContent = "浏览器未能保存显示设置，原错题没有改变。";
+          check.checked = !hidden["mistake:" + item.key];
+        }
+      };
+      checkLabel.append(
+        check,
+        el("span", check.checked ? "显示这道错题" : "显示这道错题（已隐藏）"),
+      );
+      card.append(checkLabel);
       card.append(
         el(
           "small",
@@ -172,6 +200,14 @@ function render() {
     $("groups").append(section);
   }
 }
+$("show-hidden").onclick = () => {
+  showHidden = !showHidden;
+  $("show-hidden").setAttribute("aria-pressed", String(showHidden));
+  $("show-hidden").textContent = showHidden
+    ? "只看勾选的错题"
+    : "查看全部（含隐藏错题）";
+  render();
+};
 $("search").oninput = render;
 $("status").onchange = render;
 $("export").onclick = () => {

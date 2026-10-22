@@ -1,3 +1,8 @@
+import {
+  useVisibility,
+  VisibilityTools,
+  VisibilityCheck,
+} from "./components/Visibility";
 import { useEffect, useRef, useState } from "react";
 import { books, lessons } from "./catalog";
 import type { Answer, Lesson, RecordRow, Stage, Task } from "./types";
@@ -30,6 +35,7 @@ function linkedLesson() {
   );
 }
 function App() {
+  const visibility = useVisibility("english");
   const [lesson, setLesson] = useState<Lesson | null>(linkedLesson),
     [page, setPage] = useState<"home" | "report">("home"),
     [book, setBook] = useState(1),
@@ -213,8 +219,9 @@ function App() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </label>
-            <div className="lesson-grid">
-              {lessons
+            <VisibilityTools
+              v={visibility}
+              ids={lessons
                 .filter(
                   (l) =>
                     l.book === book &&
@@ -223,40 +230,56 @@ function App() {
                         .toLowerCase()
                         .includes(search.toLowerCase())),
                 )
+                .map((l) => l.id)}
+            />
+            <div className="lesson-grid">
+              {lessons
+                .filter(
+                  (l) =>
+                    l.book === book &&
+                    (visibility.showAll || !visibility.isHidden(l.id)) &&
+                    (!search ||
+                      `${l.title} ${l.subtitle} ${kindNames[l.kind]}`
+                        .toLowerCase()
+                        .includes(search.toLowerCase())),
+                )
                 .map((l) => (
-                  <button
-                    className="lesson-card"
-                    key={l.id}
-                    onClick={() => {
-                      setLesson(l);
-                      window.scrollTo(0, 0);
-                    }}
-                  >
-                    <div className={"card-art " + l.kind}>
-                      <Art
-                        name={l.kind === "listen" ? "owl" : l.tasks[0].scene}
-                      />
-                      <span>{String(l.number).padStart(2, "0")}</span>
-                    </div>
-                    <span className="lesson-type">
-                      第{l.number}题 · {kindNames[l.kind]}
-                    </span>
-                    <strong>{l.title}</strong>
-                    <em>{l.subtitle}</em>
-                    <div className="lesson-bottom">
-                      <span>{l.tasks.length}个小练习</span>
-                      <b>
-                        {records.some(
-                          (r) =>
-                            r.lesson === l.id &&
-                            r.phase === "transfer" &&
-                            r.completed,
-                        )
-                          ? "已探索 ✓"
-                          : "开始探索 ↗"}
-                      </b>
-                    </div>
-                  </button>
+                  <div className="lesson-item" key={l.id}>
+                    <button
+                      className="lesson-card"
+                      key={l.id}
+                      onClick={() => {
+                        setLesson(l);
+                        window.scrollTo(0, 0);
+                      }}
+                    >
+                      <div className={"card-art " + l.kind}>
+                        <Art
+                          name={l.kind === "listen" ? "owl" : l.tasks[0].scene}
+                        />
+                        <span>{String(l.number).padStart(2, "0")}</span>
+                      </div>
+                      <span className="lesson-type">
+                        第{l.number}题 · {kindNames[l.kind]}
+                      </span>
+                      <strong>{l.title}</strong>
+                      <em>{l.subtitle}</em>
+                      <div className="lesson-bottom">
+                        <span>{l.tasks.length}个小练习</span>
+                        <b>
+                          {records.some(
+                            (r) =>
+                              r.lesson === l.id &&
+                              r.phase === "transfer" &&
+                              r.completed,
+                          )
+                            ? "已探索 ✓"
+                            : "开始探索 ↗"}
+                        </b>
+                      </div>
+                    </button>
+                    <VisibilityCheck v={visibility} id={l.id} title={l.title} />
+                  </div>
                 ))}
             </div>
           </section>

@@ -53,7 +53,7 @@ jobs:
         working-directory: .
         run: |
           node scripts/build-learning-catalog.mjs --check
-          node --test scripts/mistakes.test.mjs
+          node --test scripts/mistakes.test.mjs scripts/visibility.test.mjs
       - run: npm test
       - run: npm run build
       - run: npm run test:e2e -- --workers=2

@@ -1408,3 +1408,5 @@ progress {
   }
 }
 header .header-wrap{flex-wrap:wrap;gap:10px}header nav{flex-wrap:wrap;gap:10px}header nav a{min-height:44px;display:inline-flex;align-items:center}
+
+.visibility-tools{margin:18px 0;padding:16px;border:1px solid #bfcfbe;background:#eef3e8;border-radius:14px;color:#344e40}.visibility-tools>div{display:flex;flex-wrap:wrap;gap:8px}.visibility-tools button{min-height:44px;padding:9px 12px;white-space:normal}.visibility-check{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:14px;line-height:1.6;overflow-wrap:anywhere;min-height:44px;cursor:pointer}.visibility-check input{width:22px;height:22px;min-width:22px;flex:0 0 22px;padding:0;margin:0;accent-color:#37694f}.lesson-item{min-width:0;display:flex;flex-direction:column}.lesson-item>.lesson-card{width:100%;flex:1;text-align:left}.lesson-item>.visibility-check{padding:0 8px}.visibility-tools p{font-size:15px;margin:0 0 10px}

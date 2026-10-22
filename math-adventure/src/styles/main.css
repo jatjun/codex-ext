@@ -3114,3 +3114,9 @@ table td {
 .header-inner{flex-wrap:wrap;gap:10px}
 
 .original-diagram{white-space:normal;background:#f6f8ef;border-radius:14px;padding:12px;margin:18px 0}.original-diagram button,.original-diagram input{display:none}.original-diagram>div{pointer-events:none}.original-diagram svg{max-width:100%;height:auto}.original-diagram small{display:block;text-align:center}
+
+.original-shop>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.original-shop figure{margin:0;text-align:center;background:#fff;padding:8px;border:1px solid #d6dfce;border-radius:10px}.original-shop figure span{font-size:34px}.original-shop figcaption{font-size:14px;overflow-wrap:anywhere}
+
+.visibility-tools{margin:18px 0;padding:16px;border:1px solid #bfcfbe;background:#eef3e8;border-radius:14px;color:#344e40}.visibility-tools>div{display:flex;flex-wrap:wrap;gap:8px}.visibility-tools button{min-height:44px;padding:9px 12px;white-space:normal}.visibility-check{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:14px;line-height:1.6;overflow-wrap:anywhere;min-height:44px;cursor:pointer}.visibility-check input{width:22px;height:22px;min-width:22px;flex:0 0 22px;padding:0;margin:0;accent-color:#37694f}.lesson-item{min-width:0;display:flex;flex-direction:column}.lesson-item>.lesson-card{width:100%;flex:1;text-align:left}.lesson-item>.visibility-check{padding:0 8px}.visibility-tools p{font-size:15px;margin:0 0 10px}
+
+.lesson-item>.pdf-card,.lesson-item>.queue-type-card,.lesson-item>.level-card{width:100%;flex:1;text-align:left}

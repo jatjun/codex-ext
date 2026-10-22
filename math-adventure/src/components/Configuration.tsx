@@ -1,3 +1,4 @@
+import { useVisibility, VisibilityTools, VisibilityCheck } from "./Visibility";
 import { OriginalQuestion } from "../library/Library";
 import { useMemo, useState } from "react";
 import { LevelSession } from "./LevelSession";
@@ -21,6 +22,7 @@ export function QueueMap({
   onChoose: (kind: QueueKind) => void;
   onBack: () => void;
 }) {
+  const visibility = useVisibility("math");
   return (
     <main className="page-width queue-map">
       <button className="back-link" onClick={onBack}>
@@ -31,22 +33,40 @@ export function QueueMap({
       <p className="lead">
         选一种题型。每题都能调整数字、观察移动、自己数一遍，再挑战新题。
       </p>
+      <VisibilityTools
+        v={visibility}
+        ids={queueCatalog.map((q) => "queue-" + q.kind)}
+      />
       <div className="queue-card-grid">
-        {queueCatalog.map((q, i) => (
-          <button
-            className="queue-type-card"
-            key={q.kind}
-            onClick={() => onChoose(q.kind)}
-          >
-            <span className="queue-type-icon">{q.icon}</span>
-            <small>
-              {i < 5 ? "你的题型 " + (i + 1) : "补充题型 " + (i - 4)}
-            </small>
-            <h2>{q.title}</h2>
-            <p>{q.description}</p>
-            <span>开始探索 →</span>
-          </button>
-        ))}
+        {queueCatalog
+          .filter(
+            (q) =>
+              visibility.showAll || !visibility.isHidden("queue-" + q.kind),
+          )
+          .map((q, i) => (
+            <div className="lesson-item" key={q.kind}>
+              <button
+                className="queue-type-card"
+                key={q.kind}
+                onClick={() => onChoose(q.kind)}
+              >
+                <span className="queue-type-icon">{q.icon}</span>
+                <small>
+                  {queueCatalog.indexOf(q) < 5
+                    ? "你的题型 " + (queueCatalog.indexOf(q) + 1)
+                    : "补充题型 " + (queueCatalog.indexOf(q) - 4)}
+                </small>
+                <h2>{q.title}</h2>
+                <p>{q.description}</p>
+                <span>开始探索 →</span>
+              </button>
+              <VisibilityCheck
+                v={visibility}
+                id={"queue-" + q.kind}
+                title={q.title}
+              />
+            </div>
+          ))}
       </div>
     </main>
   );

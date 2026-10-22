@@ -1,3 +1,8 @@
+import {
+  useVisibility,
+  VisibilityTools,
+  VisibilityCheck,
+} from "./components/Visibility";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { books, lessons } from "./catalog";
 import type { Lesson, RecordRow, Task, Teaching } from "./types";
@@ -43,6 +48,7 @@ function linkedLesson() {
   );
 }
 function App() {
+  const visibility = useVisibility("chinese");
   const [page, setPage] = useState<"home" | "report">("home"),
     [lesson, setLesson] = useState<Lesson | null>(linkedLesson),
     [book, setBook] = useState(1),
@@ -152,8 +158,9 @@ function App() {
                 placeholder="输入题目名，例如：反义、拼音、秋天"
               />
             </label>
-            <div className="lesson-grid">
-              {lessons
+            <VisibilityTools
+              v={visibility}
+              ids={lessons
                 .filter(
                   (l) =>
                     l.book === book &&
@@ -161,26 +168,41 @@ function App() {
                       l.title.includes(search) ||
                       labels[l.kind].includes(search)),
                 )
+                .map((l) => l.id)}
+            />
+            <div className="lesson-grid">
+              {lessons
+                .filter(
+                  (l) =>
+                    l.book === book &&
+                    (visibility.showAll || !visibility.isHidden(l.id)) &&
+                    (!search ||
+                      l.title.includes(search) ||
+                      labels[l.kind].includes(search)),
+                )
                 .map((l) => (
-                  <button
-                    className="lesson-card"
-                    key={l.id}
-                    onClick={() => {
-                      setLesson(l);
-                      window.scrollTo(0, 0);
-                    }}
-                  >
-                    <span className={"lesson-icon " + l.kind}>
-                      {icons[l.kind]}
-                    </span>
-                    <span className="lesson-number">
-                      第 {l.number} 题 · {labels[l.kind]}
-                    </span>
-                    <strong>{l.title}</strong>
-                    <span className="lesson-meta">
-                      {l.tasks.length} 个小练习 <b>开始探索 ↗</b>
-                    </span>
-                  </button>
+                  <div className="lesson-item" key={l.id}>
+                    <button
+                      className="lesson-card"
+                      key={l.id}
+                      onClick={() => {
+                        setLesson(l);
+                        window.scrollTo(0, 0);
+                      }}
+                    >
+                      <span className={"lesson-icon " + l.kind}>
+                        {icons[l.kind]}
+                      </span>
+                      <span className="lesson-number">
+                        第 {l.number} 题 · {labels[l.kind]}
+                      </span>
+                      <strong>{l.title}</strong>
+                      <span className="lesson-meta">
+                        {l.tasks.length} 个小练习 <b>开始探索 ↗</b>
+                      </span>
+                    </button>
+                    <VisibilityCheck v={visibility} id={l.id} title={l.title} />
+                  </div>
                 ))}
             </div>
             {lessons.filter((l) => l.book === book && l.title.includes(search))

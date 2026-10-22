@@ -1,3 +1,8 @@
+import {
+  useVisibility,
+  VisibilityTools,
+  VisibilityCheck,
+} from "./components/Visibility";
 import { Review } from "./library/Review";
 import { mathLibrary } from "./library/catalog";
 import { catalog as workbookCatalog } from "./workbooks/model";
@@ -25,6 +30,7 @@ function Brand() {
   );
 }
 export default function App() {
+  const visibility = useVisibility("math");
   const [reviewId, setReviewId] = useState(() =>
     new URLSearchParams(location.search).get("review"),
   );
@@ -242,68 +248,79 @@ export default function App() {
               </div>
               <span className="map-note">4 个实验室 · 随时开始</span>
             </div>
+            <VisibilityTools v={visibility} ids={levels.map((l) => l.id)} />
             <div className="level-grid">
-              {levels.map((l, i) => (
-                <button
-                  className={"level-card " + l.color}
-                  key={l.id}
-                  onClick={() => navigate(l.id)}
-                >
-                  <div className="card-top">
-                    <span className="level-number">实验 0{i + 1}</span>
-                    <span className="card-arrow">↗</span>
-                  </div>
-                  <div className={"card-art art-" + l.id}>
-                    {l.id === "shop" ? (
-                      <>
-                        <span className="art-bear">🧸</span>
-                        <span className="art-bear small-bear">🧸</span>
-                        <i className="mini-coin">¥</i>
-                        <i className="mini-coin coin-two">¥</i>
-                      </>
-                    ) : l.id === "shapes" ? (
-                      <>
-                        <span className="art-star">✦</span>
-                        <span className="art-plus">＋</span>
-                        <span className="art-triangle">△</span>
-                        <span className="art-equal">＝ ?</span>
-                      </>
-                    ) : l.id === "detective" ? (
-                      <>
-                        <span className="art-butterfly">🦋</span>
-                        <span className="art-fish">🐟</span>
-                        <span className="art-magnifier">⌕</span>
-                      </>
-                    ) : (
-                      <div className="mini-square">
-                        {Array.from({ length: 25 }, (_, n) => (
-                          <i key={n} className={n === 12 ? "center-dot" : ""} />
-                        ))}
+              {levels.map((l, i) =>
+                visibility.showAll || !visibility.isHidden(l.id) ? (
+                  <div className="lesson-item" key={l.id}>
+                    <button
+                      className={"level-card " + l.color}
+                      key={l.id}
+                      onClick={() => navigate(l.id)}
+                    >
+                      <div className="card-top">
+                        <span className="level-number">实验 0{i + 1}</span>
+                        <span className="card-arrow">↗</span>
                       </div>
-                    )}
+                      <div className={"card-art art-" + l.id}>
+                        {l.id === "shop" ? (
+                          <>
+                            <span className="art-bear">🧸</span>
+                            <span className="art-bear small-bear">🧸</span>
+                            <i className="mini-coin">¥</i>
+                            <i className="mini-coin coin-two">¥</i>
+                          </>
+                        ) : l.id === "shapes" ? (
+                          <>
+                            <span className="art-star">✦</span>
+                            <span className="art-plus">＋</span>
+                            <span className="art-triangle">△</span>
+                            <span className="art-equal">＝ ?</span>
+                          </>
+                        ) : l.id === "detective" ? (
+                          <>
+                            <span className="art-butterfly">🦋</span>
+                            <span className="art-fish">🐟</span>
+                            <span className="art-magnifier">⌕</span>
+                          </>
+                        ) : (
+                          <div className="mini-square">
+                            {Array.from({ length: 25 }, (_, n) => (
+                              <i
+                                key={n}
+                                className={n === 12 ? "center-dot" : ""}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="card-copy">
+                        <span className="card-topic">
+                          {
+                            [
+                              "两步应用题",
+                              "乘除法与数字关系",
+                              "分类统计与检查",
+                              "方阵与位置",
+                            ][i]
+                          }
+                        </span>
+                        <h3>{l.title}</h3>
+                        <p>{l.subtitle}</p>
+                        <div className="card-bottom">
+                          <span>
+                            {completed(l.id)
+                              ? "✓ 已探索 · 再试一次"
+                              : "开始探索"}
+                          </span>
+                          <span>→</span>
+                        </div>
+                      </div>
+                    </button>
+                    <VisibilityCheck v={visibility} id={l.id} title={l.title} />
                   </div>
-                  <div className="card-copy">
-                    <span className="card-topic">
-                      {
-                        [
-                          "两步应用题",
-                          "乘除法与数字关系",
-                          "分类统计与检查",
-                          "方阵与位置",
-                        ][i]
-                      }
-                    </span>
-                    <h3>{l.title}</h3>
-                    <p>{l.subtitle}</p>
-                    <div className="card-bottom">
-                      <span>
-                        {completed(l.id) ? "✓ 已探索 · 再试一次" : "开始探索"}
-                      </span>
-                      <span>→</span>
-                    </div>
-                  </div>
-                </button>
-              ))}
+                ) : null,
+              )}
             </div>
           </section>
           <section className="learning-path">
