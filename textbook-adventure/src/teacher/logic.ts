@@ -46,3 +46,15 @@ export function canAdvance(step: number, answered: boolean) {
 export function stageAfterAnswer(attempts: number): Stage {
   return attempts === 1 ? "HINT_1" : attempts === 2 ? "HINT_2" : "EXPLAIN";
 }
+
+export const stageLabels: Record<Stage, string> = {
+  INTRO: "故事时间",
+  OBSERVE: "一起观察",
+  QUESTION: "先猜一猜",
+  HINT_1: "小提示",
+  HINT_2: "动手看看",
+  EXPLAIN: "一起验证",
+  RETRY: "重新尝试",
+  TRANSFER: "换题挑战",
+  COMPLETE: "探索完成",
+};

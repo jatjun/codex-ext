@@ -7,6 +7,7 @@
 安装Node.js 22 LTS和Git，下载仓库的功能分支，在PowerShell或终端中：
 
 ```sh
+git clone --branch codex/textbook-observation-v1 https://github.com/jatjun/codex-ext.git
 cd codex-ext/textbook-adventure
 npm ci
 npm run dev

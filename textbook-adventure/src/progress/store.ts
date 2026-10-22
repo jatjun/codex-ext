@@ -3,6 +3,7 @@ export interface Row {
   id: string;
   lesson: string;
   question: string;
+  questionId: string;
   phase: string;
   time: string;
   firstAnswer: string;

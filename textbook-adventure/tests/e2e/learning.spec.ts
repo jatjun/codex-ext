@@ -24,6 +24,8 @@ test("guided gate, hints, retry, transfer and immutable first answer", async ({
   await expect(page.locator(".feedback")).toContainText("点击方向按钮");
   await answer(page, "1");
   await page.getByRole("button", { name: "做一道独立练习" }).click();
+  if (await page.getByRole("slider").count())
+    await expect(page.getByRole("slider")).toHaveValue("0");
   await answer(page, "6");
   await page.getByRole("button", { name: "换数字再试一次" }).click();
   await answer(page, "6");
@@ -36,6 +38,7 @@ test("guided gate, hints, retry, transfer and immutable first answer", async ({
     JSON.parse(localStorage.getItem("textbook-adventure.records.v1")!),
   );
   expect(r[0].firstCorrect).toBe(false);
+  expect(r[0].questionId).toBe("view-guided");
   expect(r[0].attempts).toBe(3);
   expect(r[0].hints).toBe(2);
   expect(r[0].independent).toBe(false);
@@ -58,6 +61,8 @@ test("six faces persist through net unfolding, transfer and touch slider", async
   await expect(page.locator(".feedback")).toContainText("相对");
   await answer(page, "6");
   await page.getByRole("button", { name: "做一道独立练习" }).click();
+  if (await page.getByRole("slider").count())
+    await expect(page.getByRole("slider")).toHaveValue("0");
   await answer(page, "2");
   await page.getByRole("button", { name: "换数字再试一次" }).click();
   await answer(page, "6");
@@ -132,6 +137,7 @@ test("real CSS transition freezes on pause and resumes, directions match the cam
   await page.getByRole("button", { name: "开始探索", exact: true }).click();
   await page.getByRole("button", { name: "到后面看", exact: true }).click();
   await page.waitForTimeout(180);
+  await page.getByRole("button", { name: "暂停", exact: true }).click();
   await page.getByRole("button", { name: "暂停", exact: true }).click();
   const before = await page
     .locator(".solid")

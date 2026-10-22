@@ -14,6 +14,7 @@ import {
   feedback,
   canAdvance,
   stageAfterAnswer,
+  stageLabels,
   type Stage,
 } from "./teacher/logic";
 import { read, write, result, type Row } from "./progress/store";
@@ -58,9 +59,12 @@ function App() {
   }
   function stop() {
     setPlaying(false);
-    pausedAnimations.current = document
-      .getAnimations()
-      .filter((a) => a.playState === "running");
+    pausedAnimations.current = [
+      ...new Set([
+        ...pausedAnimations.current,
+        ...document.getAnimations().filter((a) => a.playState === "running"),
+      ]),
+    ];
     pausedAnimations.current.forEach((a) => a.pause());
     window.speechSynthesis?.pause();
   }
@@ -192,6 +196,7 @@ function App() {
       id: id.current,
       lesson: kind,
       question: prompt(kind, phase),
+      questionId: `${kind}-${phase}`,
       phase,
       time: old?.time || new Date().toISOString(),
       firstAnswer: old?.firstAnswer ?? answer,
@@ -259,7 +264,7 @@ function App() {
     resetQuestion(phase === "guided" ? "practice" : "transfer");
     setStage(phase === "guided" ? "RETRY" : "TRANSFER");
     setAngles([-22, -28]);
-    setFlat(kind === "net" ? 1 : 0);
+    setFlat(0);
   }
   function navigateHome() {
     cancel();
@@ -371,7 +376,7 @@ function App() {
               <section className="stage paper">
                 <div className="stage-top">
                   <span className="badge">
-                    {stage} ·{" "}
+                    {stageLabels[stage]} ·{" "}
                     {phase === "guided"
                       ? "一起探索"
                       : phase === "practice"
