@@ -51,6 +51,7 @@ export default function App() {
   return (
     <>
       <header className="site-header">
+        <a href="../" style={{ display: "block", textAlign: "center", padding: "6px", fontSize: "12px" }}>← 学科首页 · 数学 / 语文</a>
         <div className="page-width header-inner">
           <button
             className="brand-button"

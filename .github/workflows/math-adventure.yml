@@ -1,11 +1,23 @@
-name: Math Adventure · checks and Pages
+name: Learning Garden · checks and Pages
 
 on:
   push:
     branches: [main, codex/math-adventure-v1]
-    paths: ["math-adventure/**", ".github/workflows/math-adventure.yml"]
+    paths:
+      [
+        "math-adventure/**",
+        "chinese-adventure/**",
+        "learning-home/**",
+        ".github/workflows/math-adventure.yml",
+      ]
   pull_request:
-    paths: ["math-adventure/**", ".github/workflows/math-adventure.yml"]
+    paths:
+      [
+        "math-adventure/**",
+        "chinese-adventure/**",
+        "learning-home/**",
+        ".github/workflows/math-adventure.yml",
+      ]
   workflow_dispatch:
 
 permissions:
@@ -28,21 +40,41 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: math-adventure/package-lock.json
+          cache-dependency-path: |
+            math-adventure/package-lock.json
+            chinese-adventure/package-lock.json
       - run: npm ci
       - run: npm test
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e -- --workers=2
+      - name: Check and build Chinese Adventure
+        working-directory: chinese-adventure
+        run: |
+          npm ci
+          npm test
+          npm run build
+          npm run test:e2e -- --workers=2
+      - name: Assemble shared home and both subjects
+        working-directory: .
+        run: |
+          mkdir -p learning-site/math-adventure learning-site/chinese-adventure
+          cp -R math-adventure/dist/. learning-site/
+          cp -R math-adventure/dist/. learning-site/math-adventure/
+          cp -R chinese-adventure/dist/. learning-site/chinese-adventure/
+          cp learning-home/index.html learning-site/index.html
+          touch learning-site/.nojekyll
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: math-adventure-browser-results
-          path: math-adventure/test-results/
+          path: |
+            math-adventure/test-results/
+            chinese-adventure/test-results/
           if-no-files-found: ignore
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: math-adventure/dist
+          path: learning-site
   deploy:
     if: github.event_name != 'pull_request' && vars.MATH_ADVENTURE_PAGES_ENABLED == 'true'
     needs: check
@@ -55,6 +87,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/configure-pages@v5
-      - name: Deploy Math Adventure
+      - name: Deploy Learning Garden
         id: deployment
         uses: actions/deploy-pages@v4

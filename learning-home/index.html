@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f7f5ed" />
+    <title>学习小花园 · 数学与语文动画</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f7f5ed;
+        color: #2a443b;
+        font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+        line-height: 1.8;
+      }
+      header,
+      main,
+      footer {
+        max-width: 1080px;
+        margin: auto;
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+      header {
+        padding-top: 30px;
+        font-weight: 700;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .logo {
+        display: grid;
+        place-items: center;
+        width: 41px;
+        height: 41px;
+        background: #386e56;
+        color: #fff8dc;
+        border-radius: 13px;
+        font-size: 26px;
+      }
+      header small {
+        font-size: 10px;
+        letter-spacing: 2px;
+        display: block;
+        color: #8a9980;
+      }
+      .intro {
+        text-align: center;
+        padding: 66px 0 42px;
+      }
+      .eyebrow {
+        color: #8e9e7d;
+        font-size: 12px;
+        letter-spacing: 3px;
+      }
+      h1 {
+        font-size: clamp(33px, 5vw, 51px);
+        font-family: "Songti SC", SimSun, serif;
+        line-height: 1.6;
+        margin: 15px 0;
+      }
+      h1 em {
+        color: #56815b;
+        font-style: normal;
+      }
+      .intro p {
+        font-size: 16px;
+        color: #839078;
+      }
+      .subjects {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+      }
+      .card {
+        background: #fffdf7;
+        border: 1px solid #dde4d5;
+        border-radius: 25px;
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: inherit;
+        min-height: 370px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px #435d3010;
+      }
+      .card:focus-visible {
+        outline: 3px solid #d4a055;
+        outline-offset: 5px;
+      }
+      .card .art {
+        height: 145px;
+        display: grid;
+        place-items: center;
+        position: relative;
+        background: #e9e9f3;
+        border-radius: 17px;
+        font-size: 70px;
+        overflow: hidden;
+      }
+      .card.cn .art {
+        background: #e9eedf;
+      }
+      .art b {
+        font-size: 65px;
+        font-weight: 500;
+      }
+      .art i {
+        font-size: 36px;
+        font-style: normal;
+        position: absolute;
+        left: 22%;
+        top: 15px;
+        color: #9b97bd;
+        transform: rotate(-15deg);
+      }
+      .art span {
+        font-size: 35px;
+        position: absolute;
+        right: 20%;
+        bottom: 18px;
+      }
+      .card h2 {
+        font-size: 27px;
+        margin: 21px 0 7px;
+      }
+      .card small {
+        color: #9aa48d;
+        font-size: 10px;
+        letter-spacing: 2px;
+      }
+      .card p {
+        font-size: 14px;
+        color: #7d8e72;
+        flex: 1;
+      }
+      .enter {
+        font-size: 15px;
+        font-weight: 700;
+        color: #67759a;
+      }
+      .cn .enter {
+        color: #5a8158;
+      }
+      .note {
+        text-align: center;
+        color: #9aa38d;
+        font-size: 12px;
+        padding: 36px 0 45px;
+      }
+      footer {
+        border-top: 1px solid #e0e5d7;
+        padding-top: 22px;
+        padding-bottom: 30px;
+        color: #9aa38c;
+        font-size: 11px;
+      }
+      @media (max-width: 600px) {
+        .intro {
+          padding-top: 42px;
+        }
+        .subjects {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+        .card {
+          padding: 25px;
+          min-height: 320px;
+        }
+        .card .art {
+          height: 120px;
+        }
+        .intro p {
+          font-size: 14px;
+        }
+        .note {
+          font-size: 11px;
+        }
+        .card h2 {
+          font-size: 25px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="logo">✳</span
+      ><span>学习小花园<small>LITTLE QUESTIONS. BIG DISCOVERIES.</small></span>
+    </header>
+    <main>
+      <section class="intro">
+        <span class="eyebrow">今天，想发现什么？</span>
+        <h1>让知识动起来，<br /><em>让好奇心带路。</em></h1>
+        <p>看得见的变化，动得起来的练习。<br />选一扇门，开启今天的小冒险。</p>
+      </section>
+      <div class="subjects">
+        <a class="card math" href="./math-adventure/"
+          ><div class="art" aria-hidden="true">
+            <i>＋</i><b>🧸</b><span>△</span>
+          </div>
+          <small>MATH ADVENTURE</small>
+          <h2>数学动画实验室</h2>
+          <p>
+            移动金币、观察方阵、解开数量关系。保留全部数学关卡和可调数字错题。
+          </p>
+          <span class="enter">进入数学世界 →</span></a
+        ><a class="card cn" href="./chinese-adventure/"
+          ><div class="art" aria-hidden="true">
+            <i>字</i><b>📖</b><span>🌷</span>
+          </div>
+          <small>CHINESE ADVENTURE</small>
+          <h2>语文动画小花园</h2>
+          <p>拼合音节、移动词卡、看懂句子的动作。5本错题，观察、探索、表达。</p>
+          <span class="enter">进入语文世界 →</span></a
+        >
+      </div>
+      <p class="note">
+        电脑、手机都可打开 · 无需登录 · 学习记录保存在当前浏览器
+      </p>
+    </main>
+    <footer>用自己的眼睛观察，用自己的话说明白。</footer>
+  </body>
+</html>
