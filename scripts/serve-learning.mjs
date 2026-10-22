@@ -18,7 +18,7 @@ http
         new URL(req.url, "http://localhost").pathname,
       );
       const match = pathname.match(
-        /^\/(math|chinese|english)-adventure\/(.*)$/,
+        /^\/(math|chinese|english|textbook)-adventure\/(.*)$/,
       );
       const base = match
         ? path.join(repo, match[1] + "-adventure", "dist")

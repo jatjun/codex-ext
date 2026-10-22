@@ -20,3 +20,7 @@ My codex claude projects
 ## 按题型复习与我的错题本
 
 数学首页可按题型找原题；三科页眉和共同首页都有[我的错题本](https://jatjun.github.io/codex-ext/mistakes.html)。实际答错后自动收录，首次答案保留，口语与表达单列自查作品。说明与旧记录限制见[复习说明](docs/REVIEW_NOTEBOOKS.md)。
+
+## 教材 · 空间探索站
+
+`textbook-adventure/`为独立教材动画项目，与三科共用首页；首轮依据本次“观察物体”第1～5页截图，提供原创CSS 3D多方向观察与六面纸盒展开折叠。教材原图不入库，三科学习数据不变。[运行与教学说明](textbook-adventure/README.md)。
