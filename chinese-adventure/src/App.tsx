@@ -542,10 +542,8 @@ function Session({ lesson, leave }: { lesson: Lesson; leave: () => void }) {
   useEffect(() => {
     if (paused) cardAnimation.current?.pause();
     else cardAnimation.current?.play();
-    return () => {
-      if (paused) cardAnimation.current?.cancel();
-    };
   }, [paused]);
+  useEffect(() => () => cardAnimation.current?.cancel(), []);
   const sorting = Array.isArray(answer)
     ? answer
     : Array(task.options?.length || 0).fill("");
