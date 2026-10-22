@@ -1,5 +1,4 @@
 name: Learning Garden · checks and Pages
-
 on:
   push:
     branches: [main, codex/math-adventure-v1]
@@ -7,6 +6,7 @@ on:
       [
         "math-adventure/**",
         "chinese-adventure/**",
+        "english-adventure/**",
         "learning-home/**",
         ".github/workflows/math-adventure.yml",
       ]
@@ -15,71 +15,74 @@ on:
       [
         "math-adventure/**",
         "chinese-adventure/**",
+        "english-adventure/**",
         "learning-home/**",
         ".github/workflows/math-adventure.yml",
       ]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
   group: math-adventure-${{ github.ref }}
   cancel-in-progress: true
-
-defaults:
-  run:
-    working-directory: math-adventure
-
 jobs:
   check:
     runs-on: ubuntu-24.04
-    # Playwright v1.64.1-noble, matching both package-lock files.
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [math-adventure, chinese-adventure, english-adventure]
+    # Official Playwright image, matching all three lockfiles (1.64.1).
     container:
       image: mcr.microsoft.com/playwright@sha256:7852dc5a7d72f5fe458a597d690f6c42fbc8e9e26ddfa95f8e6ef552558d9bbf
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: |
-            math-adventure/package-lock.json
-            chinese-adventure/package-lock.json
+          cache-dependency-path: ${{ matrix.project }}/package-lock.json
       - run: npm ci
       - run: npm test
       - run: npm run build
       - run: npm run test:e2e -- --workers=2
-      - name: Check and build Chinese Adventure
-        working-directory: chinese-adventure
-        run: |
-          npm ci
-          npm test
-          npm run build
-          npm run test:e2e -- --workers=2
-      - name: Assemble shared home and both subjects
-        working-directory: .
-        run: |
-          mkdir -p learning-site/math-adventure learning-site/chinese-adventure
-          cp -R math-adventure/dist/. learning-site/
-          cp -R math-adventure/dist/. learning-site/math-adventure/
-          cp -R chinese-adventure/dist/. learning-site/chinese-adventure/
-          cp learning-home/index.html learning-site/index.html
-          touch learning-site/.nojekyll
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}-site
+          path: ${{ matrix.project }}/dist/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: math-adventure-browser-results
-          path: |
-            math-adventure/test-results/
-            chinese-adventure/test-results/
+          name: ${{ matrix.project }}-browser-results
+          path: ${{ matrix.project }}/test-results/
           if-no-files-found: ignore
+  assemble:
+    needs: check
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "*-site"
+          path: site-builds
+      - name: Assemble shared home and three subjects
+        run: |
+          mkdir -p learning-site/math-adventure learning-site/chinese-adventure learning-site/english-adventure
+          cp -R site-builds/math-adventure-site/. learning-site/
+          cp -R site-builds/math-adventure-site/. learning-site/math-adventure/
+          cp -R site-builds/chinese-adventure-site/. learning-site/chinese-adventure/
+          cp -R site-builds/english-adventure-site/. learning-site/english-adventure/
+          cp learning-home/index.html learning-site/index.html
+          touch learning-site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: learning-site
   deploy:
     if: github.event_name != 'pull_request' && vars.MATH_ADVENTURE_PAGES_ENABLED == 'true'
-    needs: check
+    needs: assemble
     runs-on: ubuntu-24.04
     permissions:
       pages: write

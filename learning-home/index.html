@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#f7f5ed" />
-    <title>学习小花园 · 数学与语文动画</title>
+    <title>学习小花园 · 数学、语文与英语动画</title>
     <style>
       * {
         box-sizing: border-box;
@@ -72,14 +72,14 @@
       }
       .subjects {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 25px;
       }
       .card {
         background: #fffdf7;
         border: 1px solid #dde4d5;
         border-radius: 25px;
-        padding: 35px;
+        padding: 25px;
         display: flex;
         flex-direction: column;
         text-decoration: none;
@@ -164,7 +164,7 @@
         color: #9aa38c;
         font-size: 11px;
       }
-      @media (max-width: 600px) {
+      @media (max-width: 800px) {
         .intro {
           padding-top: 42px;
         }
@@ -226,6 +226,17 @@
           <h2>语文动画小花园</h2>
           <p>拼合音节、移动词卡、看懂句子的动作。5本错题，观察、探索、表达。</p>
           <span class="enter">进入语文世界 →</span></a
+        >
+        <a class="card en" href="./english-adventure/"
+          ><div class="art" aria-hidden="true" style="background: #e2edf2">
+            <i>A</i><b>🦉</b><span>b</span>
+          </div>
+          <small>ENGLISH ADVENTURE</small>
+          <h2>英语奇遇岛</h2>
+          <p>
+            听英语、找字母、排词卡，画出自己的操场和书包。2本错题，30个探索入口。
+          </p>
+          <span class="enter">进入英语世界 →</span></a
         >
       </div>
       <p class="note">
