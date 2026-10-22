@@ -43,7 +43,6 @@ button {
 }
 button:hover:not(:disabled) {
   background: #edf3e7;
-  transform: translateY(-1px);
 }
 button:disabled {
   opacity: 0.48;

@@ -146,3 +146,8 @@ it("损坏记录退回空数组", () => {
 });
 it("CSV转义并防电子表格公式", () =>
   expect(csv([{ ...row, firstAnswer: '=1+"2"' }])).toContain('"\'=1+""2"""'));
+it("关联词填空接受可成立的其他表达", () => {
+  const get = (id: string) => lessons.find((l) => l.id === id)!.tasks[0];
+  expect(grade(get("cn-4-1"), "只要……就……")).toBe(true);
+  expect(grade(get("cn-4-2"), "不论……都……")).toBe(true);
+});

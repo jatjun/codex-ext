@@ -343,8 +343,58 @@ test("开放初稿在自查前保存，参考后修改不能覆盖", async ({ pa
   expect(r.firstCorrect).toBeNull();
 });
 
-test('分类搬移动画暂停后继续剩余部分', async ({page})=>{
- await open(page,1,17);await observe(page);await page.emulateMedia({reducedMotion:'no-preference'});await page.locator('[data-card-index="0"]').click();await page.locator('.bin>button').nth(1).click();
- await page.evaluate(()=>{const a=document.querySelector('[data-card-index="0"]')!.getAnimations()[0];if(!a)throw Error('missing moving card');a.playbackRate=.05;(window as any).__movingCard=a});
- await page.getByRole('button',{name:'Ⅱ 暂停',exact:true}).click();expect(await page.evaluate(()=>(window as any).__movingCard.playState)).toBe('paused');const before=await page.evaluate(()=>(window as any).__movingCard.currentTime);await page.waitForTimeout(160);expect(await page.evaluate(()=>(window as any).__movingCard.currentTime)).toBe(before);await page.getByRole('button',{name:'▶ 继续',exact:true}).click();expect(await page.evaluate(()=>(window as any).__movingCard.playState)).toBe('running');await expect(page.locator('.bin-cards button')).toHaveCount(1);
+test("分类搬移动画暂停后继续剩余部分", async ({ page }) => {
+  await open(page, 1, 17);
+  await observe(page);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.locator('[data-card-index="0"]').click();
+  await page.locator(".bin>button").nth(1).click();
+  await page.evaluate(() => {
+    const a = document
+      .querySelector('[data-card-index="0"]')!
+      .getAnimations()[0];
+    if (!a) throw Error("missing moving card");
+    a.playbackRate = 0.05;
+    (window as any).__movingCard = a;
+  });
+  await page.getByRole("button", { name: "Ⅱ 暂停", exact: true }).click();
+  expect(
+    await page.evaluate(() => (window as any).__movingCard.playState),
+  ).toBe("paused");
+  await page.evaluate(async () => {
+    await (window as any).__movingCard.ready;
+  });
+  const before = await page.evaluate(
+    () => (window as any).__movingCard.currentTime,
+  );
+  await page.waitForTimeout(160);
+  expect(
+    await page.evaluate(() => (window as any).__movingCard.currentTime),
+  ).toBe(before);
+  await page.getByRole("button", { name: "▶ 继续", exact: true }).click();
+  expect(
+    await page.evaluate(() => (window as any).__movingCard.playState),
+  ).toBe("running");
+  await expect(page.locator(".bin-cards button")).toHaveCount(1);
+});
+
+test("连续三道开放表达可稳定提交", async ({ page }) => {
+  await open(page, 4, 3);
+  await observe(page);
+  for (const text of [
+    "红苹果好像小灯笼。",
+    "我有时候读书，有时候画画。",
+    "小鸟一边飞，一边叫。",
+  ]) {
+    await page.getByRole("textbox").fill(text);
+    await page.getByRole("button", { name: "写好了，开始自查" }).click();
+    for (const c of await page.locator(".self-review input").all())
+      await c.check();
+    await page.getByRole("button", { name: "完成自查，保留我的表达" }).click();
+    await next(page);
+  }
+  await expect(page.locator(".session")).toHaveAttribute(
+    "data-stage",
+    "TRANSFER",
+  );
 });
