@@ -1,3 +1,4 @@
+import { Measurement } from "./measurement/Measurement";
 import { Explore } from "./mixed/Explore";
 import { Arithmetic } from "./mixed/Arithmetic";
 import { Mixed } from "./mixed/Mixed";
@@ -315,6 +316,11 @@ function App() {
               </p>
               <a href="?unit=mixed">进入六个互动教学工坊 →</a>　
               <a href="?unit=arithmetic">进入配套练习 →</a>
+            </section>
+            <section className="paper">
+              <h2>长度与质量 · 小小测量家</h2>
+              <p>移动尺子、折绳、拼木板、走路线、称水果和模拟曹冲称象。</p>
+              <a href="?unit=measurement">进入互动测量课程 →</a>
             </section>
             <section className="cards">
               {(["view", "net"] as Kind[]).map((k, i) => (
@@ -745,7 +751,9 @@ function App() {
   );
 }
 createRoot(document.getElementById("root")!).render(
-  new URLSearchParams(location.search).get("unit") === "explore" ? (
+  new URLSearchParams(location.search).get("unit") === "measurement" ? (
+    <Measurement />
+  ) : new URLSearchParams(location.search).get("unit") === "explore" ? (
     <Explore />
   ) : new URLSearchParams(location.search).get("unit") === "arithmetic" ? (
     <Arithmetic />
