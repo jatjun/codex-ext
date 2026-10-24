@@ -1,0 +1,112 @@
+.mixed input {
+  width: 100px;
+  padding: 9px;
+  border: 1px solid #b7d1c7;
+  border-radius: 9px;
+  margin: 8px;
+}
+.mixed .workspace {
+  margin-top: 20px;
+}
+.mix-scene svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.mixed .reason {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 12px 0;
+}
+.independent {
+  padding: 40px 10px;
+}
+.mixed article {
+  border-bottom: 1px solid #ccdcd3;
+}
+.mixed select {
+  min-height: 44px;
+}
+.mixed .answers {
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mix-scene g {
+    transition: none !important;
+  }
+}
+.exercise-visibility {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  font-size: 14px;
+}
+.exercise-visibility input {
+  width: 22px;
+  height: 22px;
+}
+.solved-expression {
+  padding: 24px;
+  background: #e0efe2;
+  border-radius: 12px;
+  animation: result-arrives 0.4s ease-out;
+}
+.cards article .course {
+  width: 100%;
+  height: calc(100% - 46px);
+}
+@keyframes result-arrives {
+  from {
+    transform: translateY(-12px);
+    opacity: 0.3;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .solved-expression {
+    animation: none;
+  }
+}
+.ticket-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 0;
+}
+.ticket-people small {
+  display: block;
+}
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+.compare-row > div {
+  max-width: 75%;
+}
+textarea {
+  width: 100%;
+  font: inherit;
+  min-height: 150px;
+  border: 1px solid #bad0c8;
+  border-radius: 10px;
+  padding: 12px;
+}
+main input,
+main select {
+  max-width: 100%;
+  min-height: 44px;
+}
+.reason {
+  display: block;
+  margin: 12px 0;
+}
+main {
+  overflow-wrap: anywhere;
+}

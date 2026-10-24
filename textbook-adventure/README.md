@@ -1,4 +1,4 @@
-# 教材动画 · 空间探索站 V1
+# 教材动画 · 空间探索与混合运算
 
 面向三年级，依据用户本次“观察物体”目录与正文第1～5页截图，先做两个可操作原创3D课程：多方向观察六面纸盒、纸盒展开与折回。不是完整教材，也不公开教材截图。
 
@@ -7,7 +7,7 @@
 安装Node.js 22 LTS和Git，下载仓库的功能分支，在PowerShell或终端中：
 
 ```sh
-git clone --branch codex/textbook-observation-v1 https://github.com/jatjun/codex-ext.git
+git clone --branch codex/textbook-mixed-operations-v1 https://github.com/jatjun/codex-ext.git
 cd codex-ext/textbook-adventure
 npm ci
 npm run dev
@@ -51,3 +51,26 @@ Linux可能需要浏览器依赖，CI使用仓库现有锁定Playwright镜像，
 新增课程必须先核对截图，在math-engine定义可测试空间/数学约束，在lessons定义观察、问题、提示和独立迁移，再接渲染。不能让AI改条件或答案。当前只做两个六面模型，不含全部教材题、全部展开图、任意剪切、语音识别或在线AI。开放解释让孩子口述，不自动评分。
 
 [教材分析](docs/CURRICULUM_ANALYSIS.md) · [教学设计](docs/TEACHING_DESIGN.md) · [动画规格](docs/ANIMATION_SPEC.md) · [架构](docs/ARCHITECTURE.md) · [后续计划](docs/NEXT_STEPS.md)
+
+
+## 混合运算（教材第6～19页）
+
+共同首页进入教材部分后，选择“第二单元 · 混合运算”。直接入口：`?unit=mixed`（六工坊）、`?unit=arithmetic`（分步练习）、`?unit=explore`（方法探索）。原有空间课程入口不变。
+
+- 六工坊：公交上下车、酸奶分组、桃子装盒、窗花两种算法、花朵数量关系、串珠比较。SVG物体移动、分组和数量变化由数学模型计算。
+- 先选择运算，操作并计算中间量，再计算最终量、选择理由。答错先给小提示，再提供图示和演示；需要帮助时自动选较小数字练习，之后做新情境迁移。
+- 开始前可修改条件；非法数量、不整除或超过画面容量会被拦截。支持暂停、重播、调速、实物/数量条视图。
+- 分步练习支持搜索、分页、自定义算式、隐藏及恢复已会题目。方法探索提供七种活动；编故事只保存自查，不声称自动理解孩子的语言。
+- 浏览器语音可选；核心功能不依赖语音或在线AI。
+
+新增本地存储键：`textbook-adventure.mixed.v1`、`textbook-adventure.expression.v1`、`textbook-adventure.explore.v1`。各模块提供记录和JSON导出，保留首次作答与后续尝试。隐藏题目沿用共同首页可见性模型，以 `textbook:` 隔离题目ID。记录不会上传服务器，也不会自动同步到其他设备。
+
+### 添加新题
+
+在 `src/mixed/problems.ts` 添加应用题，在 `arithmetic.ts` 添加计算题，使用稳定ID和已核对的页码、条件、提示。新动画题型还需要在 `model.ts` 添加可靠计算/校验，在 `Scene.tsx` 实现数量可视化，并补充规则及浏览器测试。不要通过页面元素数量反推答案。
+
+### 当前限制
+
+自适应采用明确规则，未连接大模型；探索活动条件暂时固定。并非题库中每题都有专属实物动画。使用手机浏览器仿真验证，不能替代真实iPhone和Windows设备验收。暂停会停止自动进度，已开始的短CSS过渡可能继续完成。题目记录目前按模块查看，没有跨设备账号或统一云端错题本。
+
+[混合运算教材分析](docs/MIXED_OPERATIONS_ANALYSIS.md) · [混合运算测试与交付](docs/MIXED_OPERATIONS_TEST_REPORT.md)

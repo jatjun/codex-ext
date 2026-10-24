@@ -1,3 +1,6 @@
+import { Explore } from "./mixed/Explore";
+import { Arithmetic } from "./mixed/Arithmetic";
+import { Mixed } from "./mixed/Mixed";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Solid } from "./animation/Solid";
@@ -278,6 +281,7 @@ function App() {
     <>
       <header>
         <a href="../">✳ 学习小花园</a>
+        <a href="?unit=mixed">混合运算 · 六个互动工坊 →</a>
         <button onClick={navigateHome}>课程首页</button>
         <button
           onClick={() => {
@@ -304,6 +308,14 @@ function App() {
                 原创 3D 纸盒 · 无需登录 · 无外部图片
               </span>
             </div>
+            <section className="paper">
+              <h2>第二单元 · 混合运算</h2>
+              <p>
+                公交上下客、酸奶分组、桃子装盒、窗花与串珠：先动手，再讲道理。
+              </p>
+              <a href="?unit=mixed">进入六个互动教学工坊 →</a>　
+              <a href="?unit=arithmetic">进入配套练习 →</a>
+            </section>
             <section className="cards">
               {(["view", "net"] as Kind[]).map((k, i) => (
                 <button className="course" key={k} onClick={() => open(k)}>
@@ -732,4 +744,14 @@ function App() {
     </>
   );
 }
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  new URLSearchParams(location.search).get("unit") === "explore" ? (
+    <Explore />
+  ) : new URLSearchParams(location.search).get("unit") === "arithmetic" ? (
+    <Arithmetic />
+  ) : new URLSearchParams(location.search).get("unit") === "mixed" ? (
+    <Mixed />
+  ) : (
+    <App />
+  ),
+);
