@@ -3120,3 +3120,51 @@ table td {
 .visibility-tools{margin:18px 0;padding:16px;border:1px solid #bfcfbe;background:#eef3e8;border-radius:14px;color:#344e40}.visibility-tools>div{display:flex;flex-wrap:wrap;gap:8px}.visibility-tools button{min-height:44px;padding:9px 12px;white-space:normal}.visibility-check{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:14px;line-height:1.6;overflow-wrap:anywhere;min-height:44px;cursor:pointer}.visibility-check input{width:22px;height:22px;min-width:22px;flex:0 0 22px;padding:0;margin:0;accent-color:#37694f}.lesson-item{min-width:0;display:flex;flex-direction:column}.lesson-item>.lesson-card{width:100%;flex:1;text-align:left}.lesson-item>.visibility-check{padding:0 8px}.visibility-tools p{font-size:15px;margin:0 0 10px}
 
 .lesson-item>.pdf-card,.lesson-item>.queue-type-card,.lesson-item>.level-card{width:100%;flex:1;text-align:left}
+
+
+.learning-steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+}
+.learning-steps li {
+  padding: 12px 16px;
+  border: 1px solid #cbdace;
+  border-radius: 12px;
+  background: #f1f4ed;
+}
+.learning-steps li[aria-current="step"] {
+  background: #d9eee1;
+  border: 3px solid #287b60;
+  font-weight: 700;
+}
+.learning-steps span {
+  display: inline-block;
+  margin-right: 10px;
+}
+.current-task {
+  border-left: 5px solid #287b60;
+  background: #edf7ee;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+.current-task h2 {
+  font-size: clamp(21px, 3vw, 28px);
+  line-height: 1.6;
+  margin: 8px 0;
+}
+.current-task p {
+  margin: 8px 0;
+}
+
+.learning-steps li,
+.current-task {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.task-preview {
+  font-size: 18px;
+  color: #516b61;
+}

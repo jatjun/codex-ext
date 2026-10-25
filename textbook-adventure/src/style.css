@@ -481,3 +481,35 @@ footer {
 .observer {
   transition: transform var(--duration, 1.4s) ease;
 }
+
+.current-task {
+  border-left: 5px solid #287b60;
+  background: #edf7ee;
+  padding: 16px;
+  margin: 12px 0 20px;
+}
+.current-task h2 {
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.6;
+}
+.current-task strong {
+  color: #175d46;
+}
+
+.learning-steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.learning-steps li {
+  padding: 10px;
+  background: #f1f4ed;
+  border: 1px solid #cbdace;
+  border-radius: 10px;
+}
+.learning-steps [aria-current="step"] {
+  border: 3px solid #287b60;
+  background: #d9eee1;
+  font-weight: bold;
+}

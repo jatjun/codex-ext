@@ -521,6 +521,31 @@ function App() {
                 </p>
               </section>
               <section className="teaching paper">
+                <ol className="learning-steps" aria-label="本课学习步骤">
+                  {(kind === "view"
+                    ? [
+                        "认识六个面",
+                        "从前面观察",
+                        "预测并作答",
+                        "从后面验证",
+                        "从上面观察",
+                      ]
+                    : [
+                        "认识纸盒",
+                        "沿连接边展开",
+                        "预测并作答",
+                        "检查展开图",
+                        "折回去验证",
+                      ]
+                  ).map((title, i) => (
+                    <li
+                      key={title}
+                      aria-current={i === step ? "step" : undefined}
+                    >
+                      第{i + 1}步：{title}
+                    </li>
+                  ))}
+                </ol>
                 <p className="eyebrow">观察 → 预测 → 操作 → 说出道理</p>
                 {stage === "INTRO" ? (
                   <>

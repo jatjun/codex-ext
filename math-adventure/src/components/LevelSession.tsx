@@ -531,6 +531,16 @@ export function LevelSession({
               </div>
             </div>
             <section className="question-panel">
+              <ol className="learning-steps" aria-label="本关学习步骤">
+                {(s.transfer ? level.transfer : level.questions).map((q, i) => (
+                  <li key={i} aria-current={i === s.index ? "step" : undefined}>
+                    第{i + 1}步：
+                    {i > s.index
+                      ? q.prompt.replace(/\d+(?:\.\d+)?/g, "□")
+                      : q.prompt}
+                  </li>
+                ))}
+              </ol>
               <span className="eyebrow">
                 {s.transfer
                   ? "YOUR TURN / 独立新挑战"
@@ -561,9 +571,16 @@ export function LevelSession({
                         submit();
                       }}
                     >
-                      <label htmlFor="answer">我的答案</label>
+                      <label htmlFor="answer">
+                        {s.state === "RETRY"
+                          ? question.retry.prompt
+                          : question.prompt}
+                        <br />
+                        我的答案
+                      </label>
                       <input
                         id="answer"
+                        aria-label="我的答案"
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value)}
                         disabled={!canAnswer}
@@ -639,6 +656,7 @@ export function LevelSession({
                           </label>
                           <input
                             id="answer"
+                            aria-label="我的答案"
                             inputMode={
                               question.answerKind === "set" ? "text" : "numeric"
                             }

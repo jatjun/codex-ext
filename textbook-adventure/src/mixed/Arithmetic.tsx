@@ -292,8 +292,15 @@ export function Arithmetic() {
                 </p>
               ))}
             </div>
-            <p>
-              本步计算：{steps[index].expression}
+            <ol className="learning-steps" aria-label="计算步骤">
+              {steps.map((_, i) => (
+                <li key={i} aria-current={i === index ? "step" : undefined}>
+                  第{i + 1}次计算
+                </li>
+              ))}
+            </ol>
+            <p className="current-task">
+              当前问题：{steps[index].expression} 的结果是多少？
               。先在原式中圈出这部分，再求结果。
             </p>
             <input

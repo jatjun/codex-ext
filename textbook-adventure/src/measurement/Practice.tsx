@@ -227,6 +227,16 @@ export function Practice({ onRecords }: { onRecords: () => void }) {
               </text>
             </svg>
           )}
+          <p className="current-task">
+            <strong>当前问题：</strong>
+            {selected.text}
+            <br />
+            {selected.diagram === "line"
+              ? "先拖动线段端点，再在这里填答案并点“检查答案”。"
+              : selected.choices
+                ? "请在这里选择你的答案。"
+                : "请填写下面的答案，再点“检查答案”。"}
+          </p>
           {selected.choices ? (
             <div className="actions">
               {selected.choices.map((ch, i) => (

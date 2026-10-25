@@ -580,6 +580,19 @@ export function PdfSession({
         </div>
       ) : (
         <>
+          <ol className="learning-steps" aria-label="本题学习步骤">
+            {activeLesson.tasks.map((task, i) => (
+              <li
+                key={task.id}
+                aria-current={task.id === currentTask.id ? "step" : undefined}
+              >
+                <span>第{i + 1}步</span>{" "}
+                {i > teaching.index
+                  ? task.prompt.replace(/\d+(?:\.\d+)?/g, "□")
+                  : task.prompt}
+              </li>
+            ))}
+          </ol>
           <div className="pdf-task-heading">
             <span>
               {retry
@@ -589,7 +602,23 @@ export function PdfSession({
                   : "观察之后，自己试"}
             </span>
             <p className="source-problem">{activeLesson.story}</p>
-            <h2>{currentTask.prompt}</h2>
+            <p className="task-preview">{currentTask.prompt}</p>
+            <p>
+              {animationRunning
+                ? "先观察本步演示，结束后在下方任务卡作答。"
+                : "请在下方任务卡完成当前问题。"}
+            </p>
+            {!animationRunning && (
+              <button
+                onClick={() =>
+                  document
+                    .getElementById("pdf-current-answer")
+                    ?.scrollIntoView({ block: "start" })
+                }
+              >
+                去本步作答区 ↓
+              </button>
+            )}
           </div>
           <div className="paper pdf-stage" inert={paused || undefined}>
             <PdfScene
@@ -651,27 +680,54 @@ export function PdfSession({
           {explanationDone && (
             <div className="pdf-hint">
               <p>{currentTask.explanation}</p>
-              <button
-                className="primary"
-                disabled={paused}
-                onClick={() => {
-                  if (blocked.current) return;
-                  blocked.current = true;
-                  send({ type: "RETRY" });
-                }}
-              >
-                用一道相似题重新试试
-              </button>
             </div>
           )}
-          {!animationRunning && (
+          {(!animationRunning || explanationDone) && (
             <form
+              id="pdf-current-answer"
               className="paper pdf-answer"
               onSubmit={(e) => {
                 e.preventDefault();
                 respond();
               }}
             >
+              <div
+                className="current-task"
+                role="group"
+                aria-label="当前作答任务"
+              >
+                <strong>
+                  现在请回答 · 第{retry ? 1 : teaching.index + 1}步
+                </strong>
+                <h2 id="pdf-current-prompt">{currentTask.prompt}</h2>
+                <p>
+                  {explanationDone
+                    ? "讲解完成，请在这里点“用一道相似题重新试试”。"
+                    : teaching.solved
+                      ? "已答对，请点这里的“下一步”。"
+                      : currentTask.pick
+                        ? "先在上方画面选择物体，再回到这里点“提交答案”。"
+                        : currentTask.basket
+                          ? "先在上方货架选商品，再回到这里填写并提交。"
+                          : currentTask.options
+                            ? "先点下方“请选择”，选好答案，再点“提交答案”。"
+                            : "填写下面的答案，再点“提交答案”。"}
+                </p>
+              </div>
+              {explanationDone && (
+                <button
+                  type="button"
+                  className="primary"
+                  disabled={paused}
+                  onClick={() => {
+                    if (blocked.current) return;
+                    blocked.current = true;
+                    send({ type: "RETRY" });
+                  }}
+                >
+                  用一道相似题重新试试
+                </button>
+              )}
               <label>
                 {currentTask.pick
                   ? "先在画面中选齐符合条件的物体，再提交。"
@@ -682,6 +738,7 @@ export function PdfSession({
                   (currentTask.options ? (
                     <select
                       aria-label="我的答案"
+                      aria-describedby="pdf-current-prompt"
                       disabled={!canAnswer}
                       value={answer}
                       onChange={(e) => setAnswer(e.target.value)}
@@ -695,6 +752,7 @@ export function PdfSession({
                     <>
                       <input
                         aria-label="我的答案"
+                        aria-describedby="pdf-current-prompt"
                         inputMode={
                           Number.isFinite(Number(currentTask.answer))
                             ? "numeric"
@@ -745,6 +803,14 @@ export function PdfSession({
                   我不会，需要帮助
                 </button>
               </div>
+              <button
+                type="button"
+                className="primary"
+                disabled={!teaching.solved || paused}
+                onClick={next}
+              >
+                下一步 →
+              </button>
             </form>
           )}
           {feedback && (
@@ -758,13 +824,6 @@ export function PdfSession({
               onClick={() => setGrouped(false)}
             >
               上一步：回看原摆法
-            </button>
-            <button
-              className="primary"
-              disabled={!teaching.solved || paused || animationRunning}
-              onClick={next}
-            >
-              下一步 →
             </button>
           </div>
           {teaching.solved && (

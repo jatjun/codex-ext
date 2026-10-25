@@ -515,6 +515,28 @@ export function Measurement() {
               </h1>
               <p>{lesson.goal}</p>
             </div>
+            <ol className="learning-steps" aria-label="完整学习步骤">
+              {[
+                ...steps(lesson.id, n).map((item) => item.title),
+                "独立练习",
+                "换情境迁移",
+              ].map((title, i) => (
+                <li
+                  key={i}
+                  aria-current={
+                    (phase === "guided"
+                      ? step
+                      : phase === "practice"
+                        ? 3
+                        : 4) === i
+                      ? "step"
+                      : undefined
+                  }
+                >
+                  第{i + 1}步：{title}
+                </li>
+              ))}
+            </ol>
             <details className="paper source" open={state.stage === "INTRO"}>
               <summary>教材依据与当前条件</summary>
               <p>{lesson.source}</p>
@@ -714,7 +736,17 @@ export function Measurement() {
                     {heading} ·{" "}
                     {phase === "guided" ? `第${step + 1}步` : "先独立思考"}
                   </span>
-                  <h2>{question}</h2>
+                  <div className="current-task">
+                    <strong>当前要做什么</strong>
+                    <h2>{question}</h2>
+                    <p>
+                      {state.stage === "OBSERVE"
+                        ? "先点图示下方的“播放 / 继续”，或拖动动作进度到末尾，再回到这里作答。"
+                        : state.correct
+                          ? "已答对，请在本作答区继续选择理由或进入下一步。"
+                          : "在本区域选择或填写答案，再点“检查想法”。"}
+                    </p>
+                  </div>
                   {state.stage === "OBSERVE" ? (
                     <p>请播放或亲手推进到本步末尾，再回答这个问题。</p>
                   ) : (

@@ -320,6 +320,32 @@ export function Mixed() {
             <h1>
               {lesson.icon} {lesson.title}
             </h1>
+            <ol className="learning-steps" aria-label="学习步骤">
+              {[
+                "先求中间数量",
+                "再求最终数量",
+                "说出理由",
+                "独立练习",
+                "换情境迁移",
+              ].map((label, i) => (
+                <li
+                  key={label}
+                  aria-current={
+                    (phase !== "learn"
+                      ? phase === "transfer"
+                        ? 4
+                        : 3
+                      : gate === "reason" || gate === "done"
+                        ? 2
+                        : step) === i
+                      ? "step"
+                      : undefined
+                  }
+                >
+                  {i + 1} {label}
+                </li>
+              ))}
+            </ol>
             <div className="paper">
               <b>教材原题条件</b>
               <p>{story(lesson.id, lesson.seed)}</p>
@@ -448,6 +474,11 @@ export function Mixed() {
                   {gate === "order" ? (
                     <>
                       <h2>这一步该用什么运算？</h2>
+                      <p className="current-task">
+                        {story(lesson.id, n, phase === "transfer")}
+                        <br />
+                        {instruction(lesson.id, step, n)} 请在下面选择运算符。
+                      </p>
                       <p>
                         {step === 0
                           ? "为了回答最后的问题，先求哪个数量？"
@@ -553,6 +584,16 @@ export function Mixed() {
                             : "最后的结果是多少？"
                           : "你算出的结果是多少？"}
                       </h2>
+                      <div className="current-task">
+                        <strong>当前问题</strong>
+                        <p>{story(lesson.id, n, phase === "transfer")}</p>
+                        <p>
+                          {phase === "learn"
+                            ? instruction(lesson.id, step, n)
+                            : "请独立计算这道新题。"}{" "}
+                          填写下方答案后，点“检查我的想法”。
+                        </p>
+                      </div>
                       <input
                         aria-label="我的答案"
                         type="number"
